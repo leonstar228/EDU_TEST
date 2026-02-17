@@ -23,4 +23,5 @@ namespace EDU_TEST.Models
 
         public virtual Test? Test { get; set; }
     }
+
 }

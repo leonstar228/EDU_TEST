@@ -2,6 +2,7 @@
 
 namespace EDU_TEST.Models
 {
+
     public class Test
     {
         [Key]
@@ -13,4 +14,5 @@ namespace EDU_TEST.Models
 
         public ICollection<Question>? Questions { get; set; }
     }
+
 }

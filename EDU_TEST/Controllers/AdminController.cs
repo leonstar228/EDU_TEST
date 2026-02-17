@@ -14,6 +14,12 @@ public class AdminController : Controller
         _context = context;
     }
 
+    public IActionResult Index()
+    {
+        var tests = _context.Tests.ToList();
+        return View(tests);
+    }
+    
     public IActionResult CreateTest()
     {
         return View();
@@ -47,6 +53,16 @@ public class AdminController : Controller
         _context.Tests.Update(model);
         _context.SaveChanges();
 
+        return RedirectToAction("Index");
+    }
+
+    public IActionResult DeleteTest(int id)
+    {
+        var test = _context.Tests.FirstOrDefault(t => t.Id == id);
+        if (test == null) return NotFound();
+        
+        _context.Tests.Remove(test);
+        _context.SaveChanges();
         return RedirectToAction("Index");
     }
 }

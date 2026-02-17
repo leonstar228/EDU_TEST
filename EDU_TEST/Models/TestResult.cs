@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EDU_TEST.Models
 {
+
     public class TestResult
     {
         [Key]
@@ -25,4 +26,5 @@ namespace EDU_TEST.Models
 
         public DateTime DateTaken { get; set; } = DateTime.Now;
     }
+
 }

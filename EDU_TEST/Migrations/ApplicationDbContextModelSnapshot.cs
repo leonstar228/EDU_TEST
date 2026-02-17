@@ -46,6 +46,134 @@ namespace EDU_TEST.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("AnswerOptions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsCorrect = true,
+                            QuestionId = 1,
+                            Text = "Париж"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsCorrect = false,
+                            QuestionId = 1,
+                            Text = "Ліон"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsCorrect = false,
+                            QuestionId = 1,
+                            Text = "Марсель"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsCorrect = true,
+                            QuestionId = 2,
+                            Text = "Рим"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsCorrect = false,
+                            QuestionId = 2,
+                            Text = "Мілан"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsCorrect = false,
+                            QuestionId = 2,
+                            Text = "Неаполь"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsCorrect = true,
+                            QuestionId = 3,
+                            Text = "30"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsCorrect = false,
+                            QuestionId = 3,
+                            Text = "25"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IsCorrect = false,
+                            QuestionId = 3,
+                            Text = "35"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IsCorrect = true,
+                            QuestionId = 4,
+                            Text = "20"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            IsCorrect = false,
+                            QuestionId = 4,
+                            Text = "18"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            IsCorrect = false,
+                            QuestionId = 4,
+                            Text = "22"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            IsCorrect = true,
+                            QuestionId = 5,
+                            Text = "Володимир Великий"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            IsCorrect = false,
+                            QuestionId = 5,
+                            Text = "Ярослав Мудрий"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            IsCorrect = false,
+                            QuestionId = 5,
+                            Text = "Святослав"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            IsCorrect = true,
+                            QuestionId = 6,
+                            Text = "Common Language Runtime"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            IsCorrect = false,
+                            QuestionId = 6,
+                            Text = ".NET Compiler"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            IsCorrect = false,
+                            QuestionId = 6,
+                            Text = "Virtual Machine"
+                        });
                 });
 
             modelBuilder.Entity("EDU_TEST.Models.Question", b =>
@@ -73,6 +201,50 @@ namespace EDU_TEST.Migrations
                     b.HasIndex("TestId");
 
                     b.ToTable("Questions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CorrectAnswer = "Париж",
+                            TestId = 1,
+                            Text = "Столиця Франції?"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CorrectAnswer = "Рим",
+                            TestId = 1,
+                            Text = "Столиця Італії?"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CorrectAnswer = "30",
+                            TestId = 2,
+                            Text = "5 × 6 = ?"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CorrectAnswer = "20",
+                            TestId = 2,
+                            Text = "12 + 8 = ?"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CorrectAnswer = "Володимир Великий",
+                            TestId = 3,
+                            Text = "Хто був князем Київської Русі?"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CorrectAnswer = "Common Language Runtime",
+                            TestId = 4,
+                            Text = "Що таке CLR у .NET?"
+                        });
                 });
 
             modelBuilder.Entity("EDU_TEST.Models.Test", b =>
@@ -91,6 +263,28 @@ namespace EDU_TEST.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tests");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Title = "Географія"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Title = "Математика"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Title = "Історія"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Title = "Інформатика"
+                        });
                 });
 
             modelBuilder.Entity("EDU_TEST.Models.TestResult", b =>
@@ -162,6 +356,28 @@ namespace EDU_TEST.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2026, 2, 21, 20, 4, 22, 422, DateTimeKind.Utc).AddTicks(4146),
+                            Email = "ivan@test.com",
+                            FirstName = "Іван",
+                            LastName = "Петренко",
+                            PasswordHash = "hash1",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2026, 2, 21, 20, 4, 22, 422, DateTimeKind.Utc).AddTicks(4149),
+                            Email = "maria@test.com",
+                            FirstName = "Марія",
+                            LastName = "Коваль",
+                            PasswordHash = "hash2",
+                            Role = "Student"
+                        });
                 });
 
             modelBuilder.Entity("EDU_TEST.Models.AnswerOption", b =>

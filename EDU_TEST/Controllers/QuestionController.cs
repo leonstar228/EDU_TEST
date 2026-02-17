@@ -19,38 +19,40 @@ public class QuestionController : Controller
         _context = context;
     }
 
-    public IActionResult List(int testId)
+    public async Task<IActionResult> List(int testId)
     {
-        var test = _context.Tests.Include(t => t.Questions).FirstOrDefault(t => t.Id == testId);
-        if (test == null) return NotFound();
+        var test = await _context.Tests
+            .Include(t => t.Questions)
+            .FirstOrDefaultAsync(t => t.Id == testId);
+
+        if (test == null)
+            return NotFound();
 
         return View(test);
-
     }
+
 
     public IActionResult Create(int testId)
     {
-        var question = new Question
-        {
-            TestId = testId
-        };
-        return View(question);
+        return View(new Question { TestId = testId });
     }
 
     [HttpPost]
-    public IActionResult Create(Question model)
+    public async Task<IActionResult> Create(Question model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid)
+            return View(model);
 
         _context.Questions.Add(model);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return RedirectToAction("List", new { testId = model.TestId });
     }
 
-    public IActionResult Edit(int id)
+
+    public async Task<IActionResult> Edit(int id)
     {
-        var question = _context.Questions.FirstOrDefault(q => q.Id == id);
+        var question = await _context.Questions.FindAsync(id);
         if (question == null)
             return NotFound();
 
@@ -58,20 +60,20 @@ public class QuestionController : Controller
     }
 
     [HttpPost]
-    public IActionResult Edit(Question model)
+    public async Task<IActionResult> Edit(Question model)
     {
         if (!ModelState.IsValid)
             return View(model);
 
         _context.Questions.Update(model);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return RedirectToAction("List", new { testId = model.TestId });
     }
-
-    public IActionResult Delete(int id)
+    
+    public async Task<IActionResult> Delete(int id)
     {
-        var question = _context.Questions.FirstOrDefault(q => q.Id == id);
+        var question = await _context.Questions.FindAsync(id);
         if (question == null)
             return NotFound();
 
@@ -79,16 +81,16 @@ public class QuestionController : Controller
     }
 
     [HttpPost]
-    public IActionResult DeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var question = _context.Questions.FirstOrDefault(q => q.Id == id);
+        var question = await _context.Questions.FindAsync(id);
         if (question == null)
             return NotFound();
 
         int testId = question.TestId;
 
         _context.Questions.Remove(question);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return RedirectToAction("List", new { testId });
     }

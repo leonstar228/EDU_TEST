@@ -1,3 +1,4 @@
+
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,4 +21,5 @@ public class AnswerOption
     public int QuestionId { get; set; }
 
     public virtual Question? Question { get; set; } 
+
 }

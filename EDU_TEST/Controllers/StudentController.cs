@@ -17,8 +17,7 @@ namespace EDU_TEST.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult>
-    Index()
+        public async Task<IActionResult> Index()
         {
             var tests = await _context.Tests
             .Include(t => t.Questions)
@@ -27,8 +26,7 @@ namespace EDU_TEST.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult>
-            TakeTest(int id)
+        public async Task<IActionResult> TakeTest(int id)
         {
             var test = await _context.Tests
             .Include(t => t.Questions)
@@ -41,8 +39,7 @@ namespace EDU_TEST.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult>
-            SubmitTest(int testId, Dictionary<int, string>
+        public async Task<IActionResult> SubmitTest(int testId, Dictionary<int, string>
                 answers)
         {
             var userIdStr = User.FindFirstValue("UserId");
@@ -78,8 +75,7 @@ namespace EDU_TEST.Controllers
             return RedirectToAction("MyResults");
         }
 
-        public async Task<IActionResult>
-            MyResults()
+        public async Task<IActionResult> MyResults()
         {
             var userIdStr = User.FindFirstValue("UserId");
             if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "Auth");
