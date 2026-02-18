@@ -37,6 +37,7 @@ public class AdminController : Controller
         return RedirectToAction("Index");
     }
 
+
     public IActionResult EditTest(int id)
     {
         var test = _context.Tests.FirstOrDefault(t => t.Id == id);

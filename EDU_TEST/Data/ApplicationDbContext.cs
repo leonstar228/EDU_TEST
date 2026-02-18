@@ -20,7 +20,6 @@ namespace EDU_TEST.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // --- Users ---
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(u => u.Id);
@@ -47,7 +46,7 @@ namespace EDU_TEST.Data
                     .IsRequired();
             });
 
-            // --- Tests ---
+
             modelBuilder.Entity<Test>(entity =>
             {
                 entity.HasKey(t => t.Id);
@@ -62,7 +61,7 @@ namespace EDU_TEST.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // --- Questions ---
+
             modelBuilder.Entity<Question>(entity =>
             {
                 entity.HasKey(q => q.Id);
@@ -80,7 +79,7 @@ namespace EDU_TEST.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // --- AnswerOptions ---
+
             modelBuilder.Entity<AnswerOption>(entity =>
             {
                 entity.HasKey(o => o.Id);
@@ -93,7 +92,7 @@ namespace EDU_TEST.Data
                     .IsRequired();
             });
 
-            // --- TestResults ---
+
             modelBuilder.Entity<TestResult>(entity =>
             {
                 entity.HasKey(tr => tr.Id);
@@ -111,6 +110,7 @@ namespace EDU_TEST.Data
                     .HasForeignKey(tr => tr.TestId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
 
             // --- Seed Data ---
             // Users
