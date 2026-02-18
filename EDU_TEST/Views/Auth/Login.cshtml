@@ -1,0 +1,17 @@
+﻿@model EDU_TEST.ViewModels.LoginViewModel
+
+<h2>Вхід</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Пароль</label>
+        <input asp-for="Password" type="password" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Увійти</button>
+</form>
