@@ -13,12 +13,12 @@ public class AdminController : Controller
     {
         _context = context;
     }
-    
+
     public IActionResult CreateTest()
     {
         return View();
     }
-    
+
     [HttpPost]
     public IActionResult CreateTest(Test model)
     {
@@ -31,5 +31,22 @@ public class AdminController : Controller
         return RedirectToAction("Index");
     }
 
-    
+    public IActionResult EditTest(int id)
+    {
+        var test = _context.Tests.FirstOrDefault(t => t.Id == id);
+        if (test == null) return NotFound();
+
+        return View(test);
+    }
+
+    [HttpPost]
+    public IActionResult EditTest(Test model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        _context.Tests.Update(model);
+        _context.SaveChanges();
+
+        return RedirectToAction("Index");
+    }
 }

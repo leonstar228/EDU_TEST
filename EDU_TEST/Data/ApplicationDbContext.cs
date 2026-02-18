@@ -20,6 +20,7 @@ namespace EDU_TEST.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // --- Users ---
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(u => u.Id);
@@ -46,6 +47,7 @@ namespace EDU_TEST.Data
                     .IsRequired();
             });
 
+            // --- Tests ---
             modelBuilder.Entity<Test>(entity =>
             {
                 entity.HasKey(t => t.Id);
@@ -59,7 +61,8 @@ namespace EDU_TEST.Data
                     .HasForeignKey(q => q.TestId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
-            
+
+            // --- Questions ---
             modelBuilder.Entity<Question>(entity =>
             {
                 entity.HasKey(q => q.Id);
@@ -77,7 +80,7 @@ namespace EDU_TEST.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-       
+            // --- AnswerOptions ---
             modelBuilder.Entity<AnswerOption>(entity =>
             {
                 entity.HasKey(o => o.Id);
@@ -90,7 +93,7 @@ namespace EDU_TEST.Data
                     .IsRequired();
             });
 
-           
+            // --- TestResults ---
             modelBuilder.Entity<TestResult>(entity =>
             {
                 entity.HasKey(tr => tr.Id);
@@ -108,6 +111,53 @@ namespace EDU_TEST.Data
                     .HasForeignKey(tr => tr.TestId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
+            // --- Seed Data ---
+            // Users
+            modelBuilder.Entity<User>().HasData(
+                new User { Id = 1, FirstName = "Іван", LastName = "Петренко", Email = "ivan@test.com", PasswordHash = "hash1", Role = "Student", CreatedAt = DateTime.UtcNow },
+                new User { Id = 2, FirstName = "Марія", LastName = "Коваль", Email = "maria@test.com", PasswordHash = "hash2", Role = "Student", CreatedAt = DateTime.UtcNow }
+            );
+
+            // Tests
+            modelBuilder.Entity<Test>().HasData(
+                new Test { Id = 1, Title = "Географія" },
+                new Test { Id = 2, Title = "Математика" },
+                new Test { Id = 3, Title = "Історія" },
+                new Test { Id = 4, Title = "Інформатика" }
+            );
+
+            // Questions
+            modelBuilder.Entity<Question>().HasData(
+                new Question { Id = 1, Text = "Столиця Франції?", CorrectAnswer = "Париж", TestId = 1 },
+                new Question { Id = 2, Text = "Столиця Італії?", CorrectAnswer = "Рим", TestId = 1 },
+                new Question { Id = 3, Text = "5 × 6 = ?", CorrectAnswer = "30", TestId = 2 },
+                new Question { Id = 4, Text = "12 + 8 = ?", CorrectAnswer = "20", TestId = 2 },
+                new Question { Id = 5, Text = "Хто був князем Київської Русі?", CorrectAnswer = "Володимир Великий", TestId = 3 },
+                new Question { Id = 6, Text = "Що таке CLR у .NET?", CorrectAnswer = "Common Language Runtime", TestId = 4 }
+            );
+
+            // AnswerOptions
+            modelBuilder.Entity<AnswerOption>().HasData(
+                new AnswerOption { Id = 1, Text = "Париж", IsCorrect = true, QuestionId = 1 },
+                new AnswerOption { Id = 2, Text = "Ліон", IsCorrect = false, QuestionId = 1 },
+                new AnswerOption { Id = 3, Text = "Марсель", IsCorrect = false, QuestionId = 1 },
+                new AnswerOption { Id = 4, Text = "Рим", IsCorrect = true, QuestionId = 2 },
+                new AnswerOption { Id = 5, Text = "Мілан", IsCorrect = false, QuestionId = 2 },
+                new AnswerOption { Id = 6, Text = "Неаполь", IsCorrect = false, QuestionId = 2 },
+                new AnswerOption { Id = 7, Text = "30", IsCorrect = true, QuestionId = 3 },
+                new AnswerOption { Id = 8, Text = "25", IsCorrect = false, QuestionId = 3 },
+                new AnswerOption { Id = 9, Text = "35", IsCorrect = false, QuestionId = 3 },
+                new AnswerOption { Id = 10, Text = "20", IsCorrect = true, QuestionId = 4 },
+                new AnswerOption { Id = 11, Text = "18", IsCorrect = false, QuestionId = 4 },
+                new AnswerOption { Id = 12, Text = "22", IsCorrect = false, QuestionId = 4 },
+                new AnswerOption { Id = 13, Text = "Володимир Великий", IsCorrect = true, QuestionId = 5 },
+                new AnswerOption { Id = 14, Text = "Ярослав Мудрий", IsCorrect = false, QuestionId = 5 },
+                new AnswerOption { Id = 15, Text = "Святослав", IsCorrect = false, QuestionId = 5 },
+                new AnswerOption { Id = 16, Text = "Common Language Runtime", IsCorrect = true, QuestionId = 6 },
+                new AnswerOption { Id = 17, Text = ".NET Compiler", IsCorrect = false, QuestionId = 6 },
+                new AnswerOption { Id = 18, Text = "Virtual Machine", IsCorrect = false, QuestionId = 6 }
+            );
         }
     }
 }
