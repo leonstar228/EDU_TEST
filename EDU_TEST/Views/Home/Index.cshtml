@@ -2,21 +2,351 @@
     ViewData["Title"] = "Головна";
 }
 
-<h1>Система тестування студентів</h1>
+<style>
 
-<p>Ласкаво просимо!</p>
+    .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
 
-<div>
-    <a asp-controller="Auth" asp-action="Login" class="btn btn-primary">Увійти</a>
-    <a asp-controller="Auth" asp-action="Register" class="btn btn-secondary">Зареєструватися</a>
+
+    .wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+        background-size: cover;
+        background-repeat: no-repeat;
+        animation: wave 10s linear infinite alternate;
+    }
+
+    .wave2 {
+        height: 150px;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.2" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,208C672,213,768,203,864,186.7C960,171,1056,149,1152,149.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+        background-size: cover;
+        bottom: 20px;
+        opacity: 0.6;
+    }
+
+
+    @@keyframes wave {
+        0% {
+            transform: translateX(0) scaleX(1);
+        }
+
+        100% {
+            transform: translateX(-50px) scaleX(1.05);
+        }
+    }
+
+
+    .card {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: none;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        z-index: 2;
+    }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.7s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 40px rgba(0,0,0,0.2) !important;
+        }
+
+
+    .card-icon {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 30px;
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s;
+    }
+
+    .card:hover .card-icon {
+        transform: rotate(360deg) scale(1.1);
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.6);
+    }
+
+
+    .animated-title {
+        animation: fadeInDown 1s;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+
+    @@keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+    .btn-pulse {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+        .btn-pulse::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .btn-pulse:active::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        .btn-pulse:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+    .lead-animated {
+        animation: slideInUp 1s 0.3s both;
+        color: rgba(255,255,255,0.9) !important;
+        font-size: 1.3rem;
+    }
+
+
+    @@keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+    .card-wrapper {
+        animation: fadeInUp 1s 0.5s both;
+    }
+
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+    .floating-particle {
+        position: absolute;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: float 6s infinite;
+    }
+
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0) translateX(0);
+        }
+
+        25% {
+            transform: translateY(-20px) translateX(10px);
+        }
+
+        50% {
+            transform: translateY(20px) translateX(-10px);
+        }
+
+        75% {
+            transform: translateY(-10px) translateX(20px);
+        }
+    }
+
+    .particle1 {
+        width: 100px;
+        height: 100px;
+        top: 10%;
+        left: 5%;
+        animation-delay: 0s;
+    }
+
+    .particle2 {
+        width: 150px;
+        height: 150px;
+        bottom: 20%;
+        right: 5%;
+        animation-delay: 2s;
+    }
+
+    .particle3 {
+        width: 70px;
+        height: 70px;
+        top: 30%;
+        right: 15%;
+        animation-delay: 1s;
+    }
+
+
+    .btn-disabled-custom {
+        background: linear-gradient(135deg, #a0a0a0, #707070) !important;
+        border: none !important;
+        color: white !important;
+        cursor: not-allowed;
+        opacity: 0.8;
+    }
+
+        .btn-disabled-custom:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+</style>
+
+<div class="gradient-bg">
+
+    <div class="floating-particle particle1"></div>
+    <div class="floating-particle particle2"></div>
+    <div class="floating-particle particle3"></div>
+
+    <div class="wave"></div>
+    <div class="wave wave2"></div>
+
+    <div class="container" style="position: relative; z-index: 10;">
+        <div class="row min-vh-100 align-items-center">
+            <div class="col-12">
+                <!-- Заголовок -->
+                <div class="text-center mb-5">
+                    <h1 class="display-3 fw-bold text-white animated-title">
+                        <i class="fas fa-graduation-cap me-3"></i>
+                        Система тестування студентів
+                    </h1>
+                    <p class="lead lead-animated">
+                        <i class="fas fa-robot me-2"></i>
+                        Сучасна платформа для онлайн тестування з інтелектуальною системою оцінювання
+                    </p>
+                </div>
+
+                <!-- Картки -->
+                <div class="row g-4">
+                    <!-- Картка авторизації -->
+                    <div class="col-md-4 card-wrapper">
+                        <div class="card shadow-lg p-4 text-center h-100">
+                            <div class="card-icon">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                            <h4 class="fw-bold mb-3">Авторизація</h4>
+                            <p class="text-muted mb-4">Увійдіть у свій акаунт для доступу до тестів</p>
+                            <a href="/Auth/Login" class="btn btn-primary btn-lg btn-pulse mt-auto">
+                                <i class="fas fa-arrow-right-to-bracket me-2"></i>
+                                Увійти
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Картка реєстрації -->
+                    <div class="col-md-4 card-wrapper" style="animation-delay: 0.7s;">
+                        <div class="card shadow-lg p-4 text-center h-100">
+                            <div class="card-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h4 class="fw-bold mb-3">Реєстрація</h4>
+                            <p class="text-muted mb-4">Приєднуйтесь до платформи за 1 хвилину</p>
+                            <a href="/Auth/Register" class="btn btn-success btn-lg btn-pulse mt-auto">
+                                <i class="fas fa-user-graduate me-2"></i>
+                                Зареєструватися
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Картка "Про систему" -->
+                    <div class="col-md-4 card-wrapper" style="animation-delay: 0.9s;">
+                        <div class="card shadow-lg p-4 text-center h-100">
+                            <div class="card-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <h4 class="fw-bold mb-3">Про систему</h4>
+                            <p class="text-muted mb-4">
+                                <span class="badge bg-primary me-1">AI</span>
+                                <span class="badge bg-success me-1">Тести</span>
+                                <span class="badge bg-info">Статистика</span>
+                            </p>
+                            <p class="text-muted mb-4">
+                                Інтелектуальна платформа для проведення тестування у ВНЗ
+                            </p>
+                            <button class="btn btn-disabled-custom btn-lg mt-auto" disabled>
+                                <i class="fas fa-lock me-2"></i>
+                                Доступ після входу
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Додаткова інформація -->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="text-center text-white-50">
+                            <hr class="border-white opacity-25 w-25 mx-auto">
+                            <p class="small mt-3">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                Захищена платформа |
+                                <i class="fas fa-chart-line mx-2"></i>
+                                Миттєві результати |
+                                <i class="fas fa-mobile-alt mx-2"></i>
+                                Адаптивний дизайн
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<hr />
 
-<div>
-    <p>Після входу:</p>
-    <ul>
-        <li>Студент зможе проходити тести та дивитись свої оцінки.</li>
-        <li>Адмін зможе керувати тестами та переглядати результати студентів.</li>
-    </ul>
-</div>
+<link rel="href=" https: //cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
