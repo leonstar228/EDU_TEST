@@ -1,0 +1,27 @@
+@model IEnumerable<EDU_TEST.Models.Test>
+
+<h2>Доступні тести</h2>
+
+@if (!Model.Any())
+{
+    <p>Наразі немає доступних тестів.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var test in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@test.Title</h5>
+
+                        <a href="/Student/TakeTest/@test.Id" class="btn btn-primary">
+                            Почати тест
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

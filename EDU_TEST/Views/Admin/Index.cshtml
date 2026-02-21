@@ -1,0 +1,39 @@
+@model IEnumerable<EDU_TEST.Models.Test>
+
+<h2>Адмін панель — Тести</h2>
+
+<a class="btn btn-success mb-3" href="/Admin/CreateTest">Створити новий тест</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Назва</th>
+        <th>Опис</th>
+        <th style="width: 280px;">Дії</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var test in Model)
+    {
+        <tr>
+            <td>@test.Id</td>
+            <td>@test.Title</td>
+            
+            <td>
+                <a class="btn btn-primary btn-sm" href="/Question/List?testId=@test.Id">
+                    Питання
+                </a>
+
+                <a class="btn btn-warning btn-sm" href="/Admin/EditTest/@test.Id">
+                    Редагувати
+                </a>
+
+                <a class="btn btn-danger btn-sm" href="/Admin/DeleteTest/@test.Id">
+                    Видалити
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
