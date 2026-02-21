@@ -1,0 +1,12 @@
+﻿@model EDU_TEST.Models.Test
+
+<h2>Видалити тест</h2>
+
+<p>Ви впевнені, що хочете видалити тест: <strong>@Model.Title</strong>?</p>
+
+<form method="post" action="/Admin/DeleteTestConfirmed">
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <button type="submit" class="btn btn-danger">Видалити</button>
+    <a href="/Admin" class="btn btn-secondary">Скасувати</a>
+</form>

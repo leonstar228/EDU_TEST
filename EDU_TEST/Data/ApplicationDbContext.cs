@@ -61,7 +61,6 @@ namespace EDU_TEST.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-
             modelBuilder.Entity<Question>(entity =>
             {
                 entity.HasKey(q => q.Id);

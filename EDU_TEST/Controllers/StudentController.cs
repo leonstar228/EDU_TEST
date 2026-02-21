@@ -1,4 +1,4 @@
-﻿using EDU_TEST.Data;
+using EDU_TEST.Data;
 using EDU_TEST.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,8 +20,9 @@ namespace EDU_TEST.Controllers
         public async Task<IActionResult> Index()
         {
             var tests = await _context.Tests
-            .Include(t => t.Questions)
-            .ToListAsync();
+                .Include(t => t.Questions)
+                .ToListAsync();
+
             return View(tests);
         }
 
@@ -29,37 +30,43 @@ namespace EDU_TEST.Controllers
         public async Task<IActionResult> TakeTest(int id)
         {
             var test = await _context.Tests
-            .Include(t => t.Questions)
-            .ThenInclude(q => q.Options)
-            .FirstOrDefaultAsync(t => t.Id == id);
+                .Include(t => t.Questions)
+                .ThenInclude(q => q.Options)
+                .FirstOrDefaultAsync(t => t.Id == id);
 
-            if (test == null) return NotFound();
+            if (test == null)
+                return NotFound();
 
             return View(test);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SubmitTest(int testId, Dictionary<int, string>
-                answers)
+        public async Task<IActionResult> SubmitTest(int testId, Dictionary<int, string> answers)
         {
             var userIdStr = User.FindFirstValue("UserId");
-            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "Auth");
+            if (string.IsNullOrEmpty(userIdStr))
+                return RedirectToAction("Login", "Auth");
+
             int userId = int.Parse(userIdStr);
 
             var questions = await _context.Questions
-            .Where(q => q.TestId == testId)
-            .ToListAsync();
+                .Where(q => q.TestId == testId)
+                .ToListAsync();
 
             int correctCount = 0;
+
             foreach (var q in questions)
             {
-                if (answers.ContainsKey(q.Id) && answers[q.Id].Trim() == q.CorrectAnswer.Trim())
+                if (answers.ContainsKey(q.Id) &&
+                    answers[q.Id].Trim() == q.CorrectAnswer.Trim())
                 {
                     correctCount++;
                 }
             }
 
-            double score = (questions.Count > 0) ? ((double)correctCount / questions.Count) * 100 : 0;
+            double score = questions.Count > 0
+                ? (double)correctCount / questions.Count * 100
+                : 0;
 
             var result = new TestResult
             {
@@ -78,14 +85,16 @@ namespace EDU_TEST.Controllers
         public async Task<IActionResult> MyResults()
         {
             var userIdStr = User.FindFirstValue("UserId");
-            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "Auth");
+            if (string.IsNullOrEmpty(userIdStr))
+                return RedirectToAction("Login", "Auth");
+
             int userId = int.Parse(userIdStr);
 
             var results = await _context.TestResults
-            .Include(tr => tr.Test)
-            .Where(tr => tr.StudentId == userId)
-            .OrderByDescending(tr => tr.DateTaken)
-            .ToListAsync();
+                .Include(tr => tr.Test)
+                .Where(tr => tr.StudentId == userId)
+                .OrderByDescending(tr => tr.DateTaken)
+                .ToListAsync();
 
             return View(results);
         }

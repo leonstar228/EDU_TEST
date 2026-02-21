@@ -4,14 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace EDU_TEST.Controllers;
-
 
 [Authorize(Roles = "Admin")]
 public class QuestionController : Controller
 {
-
     private readonly ApplicationDbContext _context;
 
     public QuestionController(ApplicationDbContext context)
@@ -31,7 +28,6 @@ public class QuestionController : Controller
         return View(test);
     }
 
-
     public IActionResult Create(int testId)
     {
         return View(new Question { TestId = testId });
@@ -49,10 +45,10 @@ public class QuestionController : Controller
         return RedirectToAction("List", new { testId = model.TestId });
     }
 
-
     public async Task<IActionResult> Edit(int id)
     {
         var question = await _context.Questions.FindAsync(id);
+
         if (question == null)
             return NotFound();
 
@@ -70,10 +66,11 @@ public class QuestionController : Controller
 
         return RedirectToAction("List", new { testId = model.TestId });
     }
-    
+
     public async Task<IActionResult> Delete(int id)
     {
         var question = await _context.Questions.FindAsync(id);
+
         if (question == null)
             return NotFound();
 
@@ -84,6 +81,7 @@ public class QuestionController : Controller
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var question = await _context.Questions.FindAsync(id);
+
         if (question == null)
             return NotFound();
 

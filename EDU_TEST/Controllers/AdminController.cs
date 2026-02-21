@@ -1,12 +1,11 @@
 ﻿using EDU_TEST.Data;
 using EDU_TEST.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data;
+
 namespace EDU_TEST.Controllers;
 
 public class AdminController : Controller
 {
-
     private readonly ApplicationDbContext _context;
 
     public AdminController(ApplicationDbContext context)
@@ -19,7 +18,7 @@ public class AdminController : Controller
         var tests = _context.Tests.ToList();
         return View(tests);
     }
-    
+
     public IActionResult CreateTest()
     {
         return View();
@@ -37,7 +36,6 @@ public class AdminController : Controller
         return RedirectToAction("Index");
     }
 
-
     public IActionResult EditTest(int id)
     {
         var test = _context.Tests.FirstOrDefault(t => t.Id == id);
@@ -49,7 +47,8 @@ public class AdminController : Controller
     [HttpPost]
     public IActionResult EditTest(Test model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid) 
+            return View(model);
 
         _context.Tests.Update(model);
         _context.SaveChanges();
@@ -60,10 +59,12 @@ public class AdminController : Controller
     public IActionResult DeleteTest(int id)
     {
         var test = _context.Tests.FirstOrDefault(t => t.Id == id);
-        if (test == null) return NotFound();
-        
+        if (test == null) 
+            return NotFound();
+
         _context.Tests.Remove(test);
         _context.SaveChanges();
+
         return RedirectToAction("Index");
     }
 }
