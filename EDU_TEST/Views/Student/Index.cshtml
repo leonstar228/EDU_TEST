@@ -1,27 +1,74 @@
 @model IEnumerable<EDU_TEST.Models.Test>
-
-<h2>Доступні тести</h2>
-
-@if (!Model.Any())
-{
-    <p>Наразі немає доступних тестів.</p>
+@{
+    ViewData["Title"] = "Мій кабінет";
+    var myResults = ViewBag.MyResults as IEnumerable<EDU_TEST.Models.TestResult>;
 }
-else
-{
-    <div class="row">
-        @foreach (var test in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">@test.Title</h5>
 
-                        <a href="/Student/TakeTest/@test.Id" class="btn btn-primary">
-                            Почати тест
-                        </a>
-                    </div>
-                </div>
-            </div>
-        }
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold" style="color: #764ba2;">Привіт, @User.Identity.Name!</h1>
+        <p class="text-muted">Обери тест для проходження або переглянь свої успіхи</p>
     </div>
-}
+
+    <ul class="nav nav-tabs nav-justified mb-4" id="studentTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" id="available-tab" data-bs-toggle="tab" data-bs-target="#available" type="button">
+                Доступні тести
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="my-results-tab" data-bs-toggle="tab" data-bs-target="#myresults" type="button">
+                Мої результати
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="available">
+            <div class="row">
+                @foreach (var test in Model)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm border-0 admin-card">
+                            <div class="card-body d-flex flex-column">
+                                <h4 class="card-title fw-bold">@test.Title</h4>
+                                <p class="text-muted small">Кількість питань: @(test.Questions?.Count ?? 0)</p>
+                                <a href="/Student/TakeTest/@test.Id" class="btn btn-primary mt-auto btn-pulse rounded-pill">
+                                    Почати тест
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="myresults">
+            <div class="admin-card shadow-sm p-4 text-center">
+                @if (myResults == null || !myResults.Any())
+                {
+                    <p>Ви ще не пройшли жодного тесту.</p>
+                }
+                else
+                {
+                    <div class="row">
+                        @foreach (var res in myResults)
+                        {
+                            <div class="col-md-6 mb-3">
+                                <div class="p-3 border rounded shadow-sm d-flex justify-content-between align-items-center">
+                                    <div class="text-start">
+                                        <h6 class="mb-0">@res.Test?.Title</h6>
+                                        <small class="text-muted">@res.DateTaken.ToString("dd.MM.yyyy HH:mm")</small>
+                                    </div>
+                                    <div class="h3 fw-bold @(res.Score >= 60 ? "text-success" : "text-danger")">
+                                        @res.Score%
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
