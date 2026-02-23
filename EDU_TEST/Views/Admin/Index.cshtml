@@ -1,39 +1,120 @@
 @model IEnumerable<EDU_TEST.Models.Test>
+@{
+    ViewData["Title"] = "Панель керування";
+    var results = ViewBag.AllResults as IEnumerable<EDU_TEST.Models.TestResult>;
+}
 
-<h2>Адмін панель — Тести</h2>
-
-<a class="btn btn-success mb-3" href="/Admin/CreateTest">Створити новий тест</a>
-
-<table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Назва</th>
-        <th>Опис</th>
-        <th style="width: 280px;">Дії</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var test in Model)
-    {
-        <tr>
-            <td>@test.Id</td>
-            <td>@test.Title</td>
-            
-            <td>
-                <a class="btn btn-primary btn-sm" href="/Question/List?testId=@test.Id">
-                    Питання
-                </a>
-
-                <a class="btn btn-warning btn-sm" href="/Admin/EditTest/@test.Id">
-                    Редагувати
-                </a>
-
-                <a class="btn btn-danger btn-sm" href="/Admin/DeleteTest/@test.Id">
-                    Видалити
-                </a>
-            </td>
-        </tr>
+<style>
+    .admin-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: none;
     }
-    </tbody>
-</table>
+
+    .nav-pills .nav-link.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.05);
+        transition: 0.3s;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold animated-title" style="color: #4b306a;">Керування системою</h1>
+    </div>
+
+    <ul class="nav nav-pills nav-justified mb-4 shadow-sm p-2 bg-white rounded-pill" id="adminTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active rounded-pill" id="tests-tab" data-bs-toggle="tab" data-bs-target="#tests" type="button">
+                <i class="fas fa-vial me-2"></i>Тести
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link rounded-pill" id="ratings-tab" data-bs-toggle="tab" data-bs-target="#ratings" type="button">
+                <i class="fas fa-trophy me-2"></i>Рейтинги студентів
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="tests">
+            <div class="admin-card shadow-lg p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3>Список доступних тестів</h3>
+                    <a href="/Admin/CreateTest" class="btn btn-success btn-pulse rounded-pill px-4">
+                        <i class="fas fa-plus me-2"></i>Створити тест
+                    </a>
+                </div>
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Назва тесту</th>
+                            <th class="text-end">Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var test in Model)
+                        {
+                            <tr>
+                                <td><strong>#@test.Id</strong></td>
+                                <td>@test.Title</td>
+                                <td class="text-end">
+                                    <a href="/Question/List?testId=@test.Id" class="btn btn-sm btn-outline-primary rounded-pill me-2">
+                                        <i class="fas fa-list-ol"></i> Питання
+                                    </a>
+                                    <a href="/Admin/EditTest/@test.Id" class="btn btn-sm btn-outline-warning rounded-pill me-2">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="/Admin/DeleteTest/@test.Id" class="btn btn-sm btn-outline-danger rounded-pill">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="ratings">
+            <div class="admin-card shadow-lg p-4">
+                <h3>Успішність студентів</h3>
+                <table class="table table-hover mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Студент</th>
+                            <th>Тест</th>
+                            <th>Результат</th>
+                            <th>Дата</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (results != null)
+                        {
+                            @foreach (var res in results)
+                            {
+                                <tr>
+                                    <td>@res.Student?.FirstName @res.Student?.LastName</td>
+                                    <td>@res.Test?.Title</td>
+                                    <td>
+                                        <div class="progress" style="height: 10px; width: 100px;">
+                                            <div class="progress-bar bg-success" style="width: @res.Score%"></div>
+                                        </div>
+                                        <small>@res.Score%</small>
+                                    </td>
+                                    <td>@res.DateTaken.ToShortDateString()</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
