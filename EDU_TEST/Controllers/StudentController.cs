@@ -19,11 +19,22 @@ namespace EDU_TEST.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var tests = await _context.Tests
-                .Include(t => t.Questions)
+            var userIdStr = User.FindFirst("UserId")?.Value
+                           ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "Auth");
+            int userId = int.Parse(userIdStr);
+
+            var availableTests = await _context.Tests.Include(t => t.Questions).ToListAsync();
+
+            // ОБОВ'ЯЗКОВО додайте це, щоб результати з'явилися на вкладці
+            ViewBag.MyResults = await _context.TestResults
+                .Include(r => r.Test)
+                .Where(r => r.StudentId == userId)
+                .OrderByDescending(r => r.DateTaken)
                 .ToListAsync();
 
-            return View(tests);
+            return View(availableTests);
         }
 
         [HttpGet]
@@ -98,5 +109,27 @@ namespace EDU_TEST.Controllers
 
             return View(results);
         }
+        public async Task<IActionResult> ResultSummary(int testId)
+        {
+            var userIdStr = User.FindFirstValue("UserId");
+            if (string.IsNullOrEmpty(userIdStr))
+                return RedirectToAction("Login", "Auth");
+
+            int userId = int.Parse(userIdStr);
+
+            var result = await _context.TestResults
+                .Include(r => r.Test)
+                .Include(r => r.Test.Questions)
+                .ThenInclude(q => q.Options)
+                .Where(r => r.StudentId == userId && r.TestId == testId)
+                .OrderByDescending(r => r.DateTaken)
+                .FirstOrDefaultAsync();
+
+            if (result == null)
+                return NotFound();
+
+            return View(result);
+        }
+
     }
 }

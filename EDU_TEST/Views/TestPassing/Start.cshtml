@@ -1,36 +1,132 @@
-﻿@model EDU_TEST.Models.Test
+﻿@model EDU_TEST.Models.Question
 
-<h2>@Model.Title</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 p-4" style="border-radius: 20px;">
 
-<form method="post" asp-action="Submit">
+                @* 1. Прогрес-бар *@
+                <div class="progress mb-4" style="height: 10px; border-radius: 5px;">
+                    @{
+                        var total = (int)ViewBag.TotalQuestions;
+                        var current = (int)ViewBag.QuestionIndex + 1;
+                        var progress = ((double)current / total) * 100;
+                    }
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                         role="progressbar" style="width: @progress%"></div>
+                </div>
 
-    <input type="hidden" name="TestId" value="@Model.Id" />
-    <input type="hidden" name="StudentId" value="@User.FindFirst("Id").Value" />
+                @* 2. Заголовок питання *@
+                <h3 class="fw-bold mb-4 text-center">@Model.Text</h3>
 
-    @for (int i = 0; i < Model.Questions.Count; i++)
-    {
-        var q = Model.Questions.ElementAt(i);
+                @* 3. Стан після відповіді (результат) *@
+                @if (TempData["LastAnswerCorrect"] != null)
+                {
+                    bool isCorrect = (bool)TempData["LastAnswerCorrect"];
 
-        <div class="question-block">
-            <h4>@(i + 1). @q.Text</h4>
+                            <div class="alert @(isCorrect ? "alert-success" : "alert-danger") shadow-sm d-flex align-items-center mb-4 border-0 animate__animated animate__fadeIn" role="alert" style="border-radius: 15px;">
+                                <span class="fs-1 me-3">@(isCorrect ? "✅" : "❌")</span>
+                                <div>
+                                    <h4 class="alert-heading mb-1 fw-bold">@(isCorrect ? "Правильно!" : "Неправильно!")</h4>
+                                    <p class="mb-0 text-dark">Натисніть кнопку нижче, щоб перейти до наступного кроку.</p>
+                                </div>
+                            </div>
 
-            @foreach (var option in q.Options)
-            {
-                <label style="display:block; margin-left:15px;">
-                    <input type="radio"
-                           name="Answers[@i].SelectedAnswerId"
-                           value="@option.Id"
-                           required />
-                    @option.Text
-                </label>
-            }
+                            <div class="d-grid mt-4">
+                                <a asp-action="Start" 
+                                   asp-controller="TestPassing" 
+                                   asp-route-testId="@Model.TestId" 
+                                   asp-route-questionIndex="@((int)ViewBag.QuestionIndex + 1)" 
+                                   class="btn btn-success btn-lg rounded-pill shadow">
+                                    Наступне питання &rarr;
+                                </a>
+                            </div>
+                }
+                else
+                {
+                    @* 4. Форма вибору відповіді *@
+                            <form method="post" asp-action="SubmitAnswer" id="quizForm">
+                                <input type="hidden" name="QuestionId" value="@Model.Id" />
+                                <input type="hidden" name="TestId" value="@Model.TestId" />
+                                <input type="hidden" name="QuestionIndex" value="@ViewBag.QuestionIndex" />
 
-            <input type="hidden" name="Answers[@i].QuestionId" value="@q.Id" />
+                                <div class="list-group mb-4" id="optionsGroup">
+                            @foreach (var option in Model.Options)
+                            {
+                                                <label class="list-group-item list-group-item-action border rounded-3 mb-3 p-3 d-flex align-items-center shadow-sm option-label" style="transition: 0.2s; cursor: pointer;">
+                                                    <input type="radio" name="SelectedAnswerId" value="@option.Id" class="form-check-input me-3" required />
+                                                    <span class="fs-5 text-dark">@option.Text</span>
+                                                </label>
+                            }
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" id="submitBtn" class="btn btn-secondary btn-lg rounded-pill shadow-sm" disabled>
+                                        Оберіть варіант
+                                    </button>
+                                </div>
+                            </form>
+                }
+
+                @* 5. Виправлений підвал з прогресом *@
+                <div class="mt-4 border-top pt-3 d-flex justify-content-between align-items-center">
+                    <span class="text-muted small">ID Питання: #@Model.Id</span>
+                    <span class="badge bg-primary rounded-pill px-3 py-2">
+                        @(ViewBag.QuestionIndex + 1) / @ViewBag.TotalQuestions
+                    </span>
+                </div>
+            </div>
         </div>
+    </div>
+</div>
 
-        <hr />
+@section Scripts {
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+
+                    // Логіка вибору варіантів та активації кнопки
+                    const form = document.getElementById('quizForm');
+                    if(form) {
+                        const radioButtons = form.querySelectorAll('input[name="SelectedAnswerId"]');
+                        const submitBtn = document.getElementById('submitBtn');
+                        const labels = document.querySelectorAll('.option-label');
+
+                        radioButtons.forEach(radio => {
+                            radio.addEventListener('change', () => {
+                                submitBtn.disabled = false;
+                                submitBtn.innerText = "Перевірити відповідь";
+                                submitBtn.classList.replace('btn-secondary', 'btn-primary');
+
+                                // Візуальне підсвічування
+                                labels.forEach(l => {
+                                    l.classList.remove('border-primary', 'bg-light');
+                                    l.style.transform = "scale(1)";
+                                });
+                                const targetLabel = radio.closest('.option-label');
+                                targetLabel.classList.add('border-primary', 'bg-light');
+                                targetLabel.style.transform = "scale(1.01)";
+                            });
+                        });
+                    }
+
+                    // ЗАХИСТ ВІД КНОПКИ "НАЗАД"
+                    history.pushState(null, null, location.href);
+                    window.onpopstate = function () {
+                        history.go(1);
+                    };
+                });
+            </script>
+}
+
+<style>
+    .option-label:hover {
+        background-color: #f8f9fa;
+        transform: translateY(-2px);
     }
-
-    <button type="submit" class="btn btn-primary">Завершити тест</button>
-    @* gfhf *@
-</form>
+    .option-label.border-primary {
+        border-width: 2px !important;
+    }
+    .progress-bar {
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+</style>

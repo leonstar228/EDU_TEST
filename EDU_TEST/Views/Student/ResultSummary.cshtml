@@ -1,0 +1,20 @@
+﻿@model EDU_TEST.Models.TestResult
+
+<h2>Результат тесту: @Model.Test.Title</h2>
+<p>Дата проходження: @Model.DateTaken</p>
+<p>Оцінка: @Model.Score %</p>
+
+<h3>Питання та правильні відповіді:</h3>
+<ul>
+    @foreach (var q in Model.Test.Questions)
+    {
+        var correctOption = q.Options.FirstOrDefault(o => o.IsCorrect);
+            <li>
+                <strong>@q.Text</strong><br />
+                Правильна відповідь: @correctOption?.Text
+            </li>
+    }
+</ul>
+
+<a asp-action="MyResults" class="btn btn-secondary">До моїх результатів</a>
+

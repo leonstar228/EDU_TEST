@@ -1,0 +1,8 @@
+﻿@model EDU_TEST.Models.Test
+
+<h2>@Model.Title</h2>
+<p>Тут буде логіка проходження тесту.</p>
+
+<a asp-action="Start" asp-controller="TestPassing" asp-route-testId="@Model.Id" class="btn btn-primary">
+    Почати тест
+</a>
