@@ -81,7 +81,6 @@
             color: #fff;
         }
 
-        /* Кнопки навігації */
         .footer-nav {
             display: flex;
             flex-wrap: wrap;
@@ -138,18 +137,31 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Головна</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Auth" asp-action="Login">Увійти</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Auth" asp-action="Register">Реєстрація</a>
-                        </li>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <form method="post" asp-controller="Auth" asp-action="Logout" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-light ms-2">
+                                        Вийти
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Auth" asp-action="Login">Увійти</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Auth" asp-action="Register">Реєстрація</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-
 
     <main>
         @RenderBody()
@@ -162,9 +174,7 @@
 
                 <div class="col-md-4 mb-3">
                     <h5 class="footer-title">EDU_TEST</h5>
-                    <p>
-                        Онлайн платформа для тестування та перевірки знань студентів.
-                    </p>
+                    <p>Онлайн платформа для тестування та перевірки знань студентів.</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
@@ -193,7 +203,6 @@
             </div>
         </div>
     </footer>
-
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

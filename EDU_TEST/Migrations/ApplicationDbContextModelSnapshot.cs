@@ -361,7 +361,7 @@ namespace EDU_TEST.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 2, 25, 17, 4, 44, 839, DateTimeKind.Utc).AddTicks(7342),
+                            CreatedAt = new DateTime(2026, 2, 25, 18, 27, 41, 377, DateTimeKind.Utc).AddTicks(7844),
                             Email = "ivan@test.com",
                             FirstName = "Іван",
                             LastName = "Петренко",
@@ -371,7 +371,7 @@ namespace EDU_TEST.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 2, 25, 17, 4, 44, 839, DateTimeKind.Utc).AddTicks(7346),
+                            CreatedAt = new DateTime(2026, 2, 25, 18, 27, 41, 377, DateTimeKind.Utc).AddTicks(7847),
                             Email = "maria@test.com",
                             FirstName = "Марія",
                             LastName = "Коваль",
@@ -380,12 +380,12 @@ namespace EDU_TEST.Migrations
                         },
                         new
                         {
-                            Id = 4,
-                            CreatedAt = new DateTime(2026, 2, 25, 17, 4, 44, 839, DateTimeKind.Utc).AddTicks(7349),
+                            Id = 3,
+                            CreatedAt = new DateTime(2026, 2, 25, 18, 27, 41, 377, DateTimeKind.Utc).AddTicks(7850),
                             Email = "tom@gmail.com",
                             FirstName = "Tom",
                             LastName = "Admin",
-                            PasswordHash = "123456",
+                            PasswordHash = "73l8gRjwLftklgfdXT+MdiMEjJwGPVMsyVxe16iYpk8=",
                             Role = "Admin"
                         });
                 });

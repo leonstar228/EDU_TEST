@@ -18,7 +18,9 @@ public class TestPassingController : Controller
     }
 
     // Показ тесту студенту
-    public async Task<IActionResult> Start(int testId, int questionIndex = 0)
+    
+// Показ тесту студенту
+public async Task<IActionResult> Start(int testId, int questionIndex = 0, string handler = null)
     {
         // 1. Отримуємо тест разом із питаннями та варіантами відповідей
         var test = await _context.Tests
@@ -28,42 +30,50 @@ public class TestPassingController : Controller
 
         if (test == null) return NotFound();
 
-        // 2. Сортуємо питання за ID, щоб порядок був стабільним
+        // 2. Сортуємо питання за ID для стабільного порядку
         var questions = test.Questions.OrderBy(q => q.Id).ToList();
 
-        // 3. ЗБЕРЕЖЕННЯ БАЛІВ (TempData.Keep)
-        // Якщо це самий початок тесту (індекс 0), скидаємо бали
-        if (questionIndex == 0)
+        // 3. ОЧИЩЕННЯ СТАТУСУ ВІДПОВІДІ
+        // Якщо ми прийшли сюди через кнопку "Наступне питання" (handler == "next"),
+        // видаляємо TempData["LastAnswerCorrect"], щоб нова сторінка була чистою.
+        if (handler == "next")
         {
-            TempData["CurrentScore"] = 0;
-        }
-        else
-        {
-            // Якщо ми вже в процесі, кажемо системі НЕ видаляти бали після цього запиту
-            TempData.Keep("CurrentScore");
+            TempData.Remove("LastAnswerCorrect");
         }
 
         // 4. ПЕРЕВІРКА НА ЗАВЕРШЕННЯ
-        // Якщо індекс дорівнює кількості питань, значить тест пройдено
+        // Якщо індекс дорівнює або більший за кількість питань — фінішуємо
         if (questionIndex >= questions.Count)
         {
             return await FinishTest(testId);
         }
 
-        // 5. ПІДГОТОВКА ПОТОЧНОГО ПИТАННЯ
+        // 5. ЛОГІКА ЗБЕРЕЖЕННЯ БАЛІВ (TempData)
+        // Скидаємо бали в 0 тільки на самому першому питанні, 
+        // якщо ще не було зроблено жодної спроби відповіді.
+        if (questionIndex == 0 && TempData["LastAnswerCorrect"] == null)
+        {
+            TempData["CurrentScore"] = 0;
+        }
+
+        // Обов'язково тримаємо бали в сесії для наступних запитів
+        TempData.Keep("CurrentScore");
+
+        // 6. ПІДГОТОВКА ПОТОЧНОГО ПИТАННЯ
         var question = questions[questionIndex];
 
-        // РАНДОМІЗАЦІЯ ВАРІАНТІВ (Крок 10)
-        // Перемішуємо варіанти, щоб студент не запам'ятовував позицію кнопок
+        // РАНДОМІЗАЦІЯ ВАРІАНТІВ (щоб щоразу був інший порядок кнопок)
         var rnd = new Random();
         question.Options = question.Options.OrderBy(x => rnd.Next()).ToList();
 
-        // 6. ПЕРЕДАЧА ДАНИХ У VIEW
+        // 7. ПЕРЕДАЧА ДАНИХ У VIEW
         ViewBag.QuestionIndex = questionIndex;
         ViewBag.TotalQuestions = questions.Count;
 
         return View(question);
     }
+    // Ми НЕ робимо Keep для LastAnswerCorrect тут, 
+    // щоб він зникав сам після одного показу, якщо ми не в циклі перевірки
 
     // Прийом відповідей
     [HttpPost]
@@ -133,25 +143,19 @@ public class TestPassingController : Controller
         var option = await _context.AnswerOptions.FirstOrDefaultAsync(a => a.Id == SelectedAnswerId);
         bool isCorrect = option != null && option.IsCorrect;
 
-        // Отримуємо поточні бали
-        int currentScore = 0;
-        if (TempData["CurrentScore"] != null)
-        {
-            currentScore = (int)TempData["CurrentScore"];
-        }
+        int currentScore = TempData["CurrentScore"] != null ? (int)TempData["CurrentScore"] : 0;
 
         if (isCorrect)
         {
             currentScore++;
         }
 
-        // Зберігаємо бали та статус
         TempData["CurrentScore"] = currentScore;
         TempData["LastAnswerCorrect"] = isCorrect;
-
-        // КРИТИЧНО: зберігаємо дані для наступного запиту
         TempData.Keep("CurrentScore");
 
+        // ВАЖЛИВО: ми залишаємося на ТОМУ Ж індексі, щоб Start показав повідомлення "Правильно/Неправильно"
+        // Але в методі Start ми додали перевірку, щоб він не обнуляв бали
         return RedirectToAction("Start", new { testId = TestId, questionIndex = QuestionIndex });
     }
 
