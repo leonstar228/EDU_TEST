@@ -4,6 +4,7 @@ using EDU_TEST.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EDU_TEST.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260225170047_AddAdminUser")]
+    partial class AddAdminUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,7 +364,7 @@ namespace EDU_TEST.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 2, 25, 17, 4, 44, 839, DateTimeKind.Utc).AddTicks(7342),
+                            CreatedAt = new DateTime(2026, 2, 25, 17, 0, 45, 768, DateTimeKind.Utc).AddTicks(7774),
                             Email = "ivan@test.com",
                             FirstName = "Іван",
                             LastName = "Петренко",
@@ -371,22 +374,12 @@ namespace EDU_TEST.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 2, 25, 17, 4, 44, 839, DateTimeKind.Utc).AddTicks(7346),
+                            CreatedAt = new DateTime(2026, 2, 25, 17, 0, 45, 768, DateTimeKind.Utc).AddTicks(7777),
                             Email = "maria@test.com",
                             FirstName = "Марія",
                             LastName = "Коваль",
                             PasswordHash = "hash2",
                             Role = "Student"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(2026, 2, 25, 17, 4, 44, 839, DateTimeKind.Utc).AddTicks(7349),
-                            Email = "tom@gmail.com",
-                            FirstName = "Tom",
-                            LastName = "Admin",
-                            PasswordHash = "123456",
-                            Role = "Admin"
                         });
                 });
 

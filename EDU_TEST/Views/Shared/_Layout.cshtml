@@ -1,49 +1,205 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EDU_TEST</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EDU_TEST.styles.css" asp-append-version="true" />
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+        }
+
+        /*  HEADER */
+        .custom-navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border: none;
+        }
+
+            .custom-navbar .navbar-brand {
+                font-weight: 700;
+                color: #fff !important;
+                letter-spacing: 1px;
+            }
+
+            .custom-navbar .nav-link {
+                color: rgba(255,255,255,0.9) !important;
+                font-weight: 500;
+                position: relative;
+                margin-left: 20px;
+                transition: 0.3s;
+            }
+
+                .custom-navbar .nav-link::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    bottom: -4px;
+                    width: 0%;
+                    height: 2px;
+                    background: #fff;
+                    transition: 0.3s;
+                }
+
+                .custom-navbar .nav-link:hover::after {
+                    width: 100%;
+                }
+
+                .custom-navbar .nav-link:hover {
+                    color: #fff !important;
+                }
+
+        /* FOOTER */
+        .custom-footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: rgba(255,255,255,0.9);
+            padding: 40px 0 20px;
+            font-size: 14px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
+        }
+
+        .footer-title,
+        .footer-subtitle {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Кнопки навігації */
+        .footer-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+            .footer-nav a {
+                padding: 8px 16px;
+                border-radius: 30px;
+                background: rgba(255,255,255,0.15);
+                color: #fff;
+                font-weight: 500;
+                text-decoration: none;
+                border: 1px solid rgba(255,255,255,0.3);
+                transition: all 0.3s ease;
+            }
+
+                .footer-nav a:hover {
+                    background: #fff;
+                    color: #764ba2;
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                }
+
+        .footer-divider {
+            border-color: rgba(255,255,255,0.25);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 13px;
+            opacity: 0.85;
+        }
+    </style>
 </head>
+
 <body>
+
+    <!-- HEADER  -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EDU_TEST</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg custom-navbar">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    EDU_TEST
+                </a>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarMain">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Головна</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-controller="Auth" asp-action="Login">Увійти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Auth" asp-action="Register">Реєстрація</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - EDU_TEST - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <!--  FOOTER -->
+    <footer class="custom-footer">
+        <div class="container-fluid px-4">
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+                    <h5 class="footer-title">EDU_TEST</h5>
+                    <p>
+                        Онлайн платформа для тестування та перевірки знань студентів.
+                    </p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <h6 class="footer-subtitle">Навігація</h6>
+                    <div class="footer-nav">
+                        <a asp-controller="Home" asp-action="Index">Головна</a>
+                        <a asp-controller="Auth" asp-action="Login">Увійти</a>
+                        <a asp-controller="Auth" asp-action="Register">Реєстрація</a>
+                        <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <h6 class="footer-subtitle">Контакти</h6>
+                    <p class="mb-1">📧 support@edutest.com</p>
+                    <p class="mb-1">📞 +380 00 000 0000</p>
+                    <p class="mb-0">📍 Івано-Франківськ, Україна</p>
+                </div>
+
+            </div>
+
+            <hr class="footer-divider">
+
+            <div class="footer-bottom pt-2">
+                © @DateTime.Now.Year EDU_TEST. Всі права захищені.
+            </div>
         </div>
     </footer>
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

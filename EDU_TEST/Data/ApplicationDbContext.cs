@@ -115,7 +115,8 @@ namespace EDU_TEST.Data
             // Users
             modelBuilder.Entity<User>().HasData(
                 new User { Id = 1, FirstName = "Іван", LastName = "Петренко", Email = "ivan@test.com", PasswordHash = "hash1", Role = "Student", CreatedAt = DateTime.UtcNow },
-                new User { Id = 2, FirstName = "Марія", LastName = "Коваль", Email = "maria@test.com", PasswordHash = "hash2", Role = "Student", CreatedAt = DateTime.UtcNow }
+                new User { Id = 2, FirstName = "Марія", LastName = "Коваль", Email = "maria@test.com", PasswordHash = "hash2", Role = "Student", CreatedAt = DateTime.UtcNow },
+                new User { Id = 3, FirstName = "Tom", LastName = "Admin", Email = "tom@gmail.com", PasswordHash = "73l8gRjwLftklgfdXT+MdiMEjJwGPVMsyVxe16iYpk8=", Role = "Admin", CreatedAt = DateTime.UtcNow }
             );
 
             // Tests
