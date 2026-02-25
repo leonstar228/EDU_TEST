@@ -1,4 +1,5 @@
 using EDU_TEST.Data;
+using EDU_TEST.Models;
 using EDU_TEST.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,29 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    if (!db.Users.Any(u => u.Role == "SuperAdmin"))
+    {
+        var superAdmin = new User
+        {
+            FirstName = "Super",
+            LastName = "Admin",
+            Email = "superadmin@example.com",
+            PasswordHash = new PasswordHasher().Hash("SuperPassword123"),
+            Role = "SuperAdmin",
+            CreatedAt = DateTime.Now
+        };
+
+        db.Users.Add(superAdmin);
+        db.SaveChanges();
+    }
+}
+
 
 
 if (!app.Environment.IsDevelopment())

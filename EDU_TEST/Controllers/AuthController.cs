@@ -98,10 +98,14 @@ namespace EDU_TEST.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
+            if (user.Role == "Admin") 
+                return RedirectToAction("Index", "Admin");
 
-            if (user.Role == "Admin") return RedirectToAction("Index", "Admin");
-            
+            if (user.Role == "SuperAdmin")
+                return RedirectToAction("Index", "SuperAdmin");
+
             return RedirectToAction("Index", "Student");
+
         }
 
         public async Task<IActionResult> Logout()

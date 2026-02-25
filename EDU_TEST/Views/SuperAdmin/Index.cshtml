@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Super Admin Panel";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Панель Супер Адміністратора</h2>
+
+    <div class="row">
+
+        <!-- Створити адміна -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Створити адміністратора</h5>
+                    <p class="card-text">Додайте нового адміністратора до системи.</p>
+                    <a href="/SuperAdmin/CreateAdmin" class="btn btn-primary">Створити</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Список адмінів -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Список адміністраторів</h5>
+                    <p class="card-text">Перегляньте всіх адміністраторів системи.</p>
+                    <a href="/SuperAdmin/AdminList" class="btn btn-secondary">Переглянути</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿@model List<User>
+
+<h2>Список адміністраторів</h2>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Ім'я</th>
+        <th>Прізвище</th>
+        <th>Email</th>
+        <th>Дата створення</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var admin in Model)
+    {
+        <tr>
+            <td>@admin.Id</td>
+            <td>@admin.FirstName</td>
+            <td>@admin.LastName</td>
+            <td>@admin.Email</td>
+            <td>@admin.CreatedAt.ToString("dd.MM.yyyy")</td>
+        </tr>
+    }
+    </tbody>
+</table>

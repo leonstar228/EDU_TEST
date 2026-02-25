@@ -12,5 +12,10 @@ namespace EDU_TEST.Services
             var hash = sha.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
         }
+
+        public bool Verify(string password, string hash)
+        {
+            return Hash(password) == hash;
+        }
     }
 }
