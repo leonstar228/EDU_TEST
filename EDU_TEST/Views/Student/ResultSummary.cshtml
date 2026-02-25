@@ -1,5 +1,100 @@
 ﻿@model EDU_TEST.Models.TestResult
 
+<style>
+    /* Головний контейнер результатів */
+    .results-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 15px;
+    }
+
+    /* Верхня панель з результатом */
+    .summary-header {
+        background: #ffffff;
+        border-radius: 25px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        margin-bottom: 40px;
+        border-bottom: 5px solid #667eea;
+    }
+
+    .summary-header h2 {
+        color: #2d3436;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .score-display {
+        font-size: 3rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 15px 0;
+    }
+
+    /* Список питань */
+    .questions-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .question-item {
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        border-left: 6px solid #e0e0e0; /* Нейтральний колір для списку */
+        transition: transform 0.2s;
+    }
+
+    .question-item:hover {
+        transform: translateX(5px);
+    }
+
+    .question-text {
+        font-size: 1.1rem;
+        color: #2d3436;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .correct-answer-label {
+        display: inline-block;
+        background: rgba(39, 174, 96, 0.1);
+        color: #27ae60;
+        padding: 6px 15px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    /* Кнопка повернення */
+    .btn-back {
+        background: #f1f2f6;
+        color: #57606f;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+        margin-top: 20px;
+    }
+
+    .btn-back:hover {
+        background: #dfe4ea;
+        color: #2f3542;
+    }
+
+    .text-info-custom {
+        color: #747d8c;
+        font-size: 0.9rem;
+    }
+</style>
 <h2>Результат тесту: @Model.Test.Title</h2>
 <p>Дата проходження: @Model.DateTaken</p>
 <p>Оцінка: @Model.Score %</p>

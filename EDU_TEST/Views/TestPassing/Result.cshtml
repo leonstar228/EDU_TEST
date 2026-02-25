@@ -1,5 +1,90 @@
 ﻿@model EDU_TEST.Models.TestResult
 
+<style>
+    /* Робимо фон сторінки консистентним з кабінетом, але м'якшим */
+    body {
+        background: #f4f7f6;
+    }
+
+    /* Основна картка результату */
+    .card.shadow-lg {
+        background: #ffffff !important;
+        border: none !important;
+        /* Додаємо легке світіння залежно від успіху (опціонально, через класи в HTML можна докрутити) */
+        box-shadow: 0 20px 60px rgba(0,0,0,0.08) !important;
+    }
+
+    /* Великі цифри відсотків */
+    .display-1 {
+        font-size: 6rem;
+        letter-spacing: -2px;
+        margin-bottom: 0;
+    }
+
+    /* Кольори успіху та невдачі з ефектом глибини */
+    .text-success {
+        color: #27ae60 !important;
+        text-shadow: 0 4px 15px rgba(39, 174, 96, 0.2);
+    }
+
+    .text-danger {
+        color: #e74c3c !important;
+        text-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);
+    }
+
+    /* Стилізація повідомлення (Alert) */
+    .alert.rounded-pill {
+        border: none;
+        font-weight: 600;
+    }
+
+    .alert-success {
+        background-color: rgba(39, 174, 96, 0.1) !important;
+        color: #27ae60 !important;
+    }
+
+    .alert-danger {
+        background-color: rgba(231, 76, 60, 0.1) !important;
+        color: #e74c3c !important;
+    }
+
+    /* Кнопки */
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: none !important;
+        transition: all 0.3s ease !important;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3) !important;
+    }
+
+    .btn-outline-secondary {
+        border: 2px solid #dfe4ea !important;
+        color: #747d8c !important;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #f1f2f6 !important;
+        border-color: #ced4da !important;
+        color: #2f3542 !important;
+    }
+
+    /* Назва тесту */
+    h3.fw-bold {
+        color: #2d3436;
+        font-size: 1.5rem;
+    }
+
+    .text-muted.fs-4 {
+        color: #a4b0be !important;
+    }
+</style>
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">

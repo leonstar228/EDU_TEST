@@ -1,5 +1,104 @@
 ﻿@model IEnumerable<EDU_TEST.Models.TestResult>
 
+    <style>
+    /* Загальні налаштування сторінки */
+    body {
+        background-color: #f8f9fa; /* Світлий фон для сторінки списку, щоб картки виділялися */
+    }
+
+    .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Заголовок */
+    h2.fw-bold {
+        color: #2d3436;
+        letter-spacing: -0.5px;
+    }
+
+    /* Картки результатів */
+    .card {
+        border: none !important;
+        background: #ffffff !important;
+        border-radius: 20px !important;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.15) !important;
+    }
+
+    .card-title {
+        color: #2d3436 !important;
+        font-size: 1.15rem;
+    }
+
+    /* Стилізація відсотків */
+    .text-success {
+        color: #27ae60 !important;
+        text-shadow: 0 2px 4px rgba(39, 174, 96, 0.1);
+    }
+
+    .text-danger {
+        color: #e74c3c !important;
+        text-shadow: 0 2px 4px rgba(231, 76, 60, 0.1);
+    }
+
+    /* Кнопки та посилання */
+    .btn-outline-primary {
+        border: 2px solid #667eea !important;
+        color: #667eea !important;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .btn-outline-primary:hover {
+        background: #667eea !important;
+        color: #fff !important;
+    }
+
+    .btn-link {
+        color: #764ba2 !important;
+        font-weight: 500;
+        transition: 0.2s;
+    }
+
+    .btn-link:hover {
+        color: #667eea !important;
+        padding-left: 5px !important; /* Ефект зміщення при наведенні на стрілочку */
+    }
+
+    /* Стилізація стану "Порожньо" */
+    .alert-info {
+        background: white !important;
+        border: none !important;
+        border-radius: 25px !important;
+        color: #2d3436 !important;
+        border: 1px dashed #667eea !important;
+    }
+
+    .alert-info h4 {
+        color: #764ba2;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: none !important;
+        border-radius: 50px !important;
+        padding: 10px 25px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3) !important;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.9;
+        transform: scale(1.02);
+    }
+</style>
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">📚 Мої досягнення</h2>

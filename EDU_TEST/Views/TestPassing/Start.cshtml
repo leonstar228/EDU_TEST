@@ -1,5 +1,111 @@
 ﻿@model EDU_TEST.Models.Question
 
+<style>
+    /* Фон сторінки для фокусу */
+    body {
+        background: #f0f2f5;
+    }
+
+    /* Картка питання */
+    .card {
+        border-radius: 24px !important;
+        background: #ffffff !important;
+        border: none !important;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.05) !important;
+    }
+
+    /* Прогрес-бар з градієнтом */
+    .progress {
+        background-color: #edf2f7 !important;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        background: linear-gradient(90deg, #667eea, #764ba2) !important;
+        transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1) !important;
+    }
+
+    /* Стилізація варіантів відповідей */
+    .option-label {
+        border: 2px solid #edf2f7 !important;
+        border-radius: 16px !important;
+        padding: 18px !important;
+        transition: all 0.2s ease-in-out !important;
+        background-color: #ffffff;
+    }
+
+    .option-label:hover {
+        border-color: #667eea !important;
+        background-color: rgba(102, 126, 234, 0.02) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Стан вибраної відповіді */
+    .option-label.border-primary {
+        border-color: #667eea !important;
+        background-color: rgba(102, 126, 234, 0.05) !important;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15) !important;
+    }
+
+    /* Приховуємо стандартний radio, робимо кастомний акцент */
+    .form-check-input {
+        width: 1.3em;
+        height: 1.3em;
+        margin-top: 0;
+        cursor: pointer;
+        border: 2px solid #cbd5e0;
+    }
+
+    .form-check-input:checked {
+        background-color: #667eea !important;
+        border-color: #667eea !important;
+    }
+
+    /* Кнопки */
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: none !important;
+        padding: 14px !important;
+        font-weight: 600 !important;
+    }
+
+    .btn-success {
+        background: #27ae60 !important;
+        border: none !important;
+        padding: 14px !important;
+    }
+
+    .btn-secondary {
+        background: #e2e8f0 !important;
+        color: #718096 !important;
+        border: none !important;
+    }
+
+    /* Алерти (правильно/неправильно) */
+    .alert {
+        border: none !important;
+    }
+
+    .alert-success {
+        background-color: #d1fae5 !important;
+        color: #065f46 !important;
+    }
+
+    .alert-danger {
+        background-color: #fee2e2 !important;
+        color: #991b1b !important;
+    }
+
+    /* Текст питання */
+    h3.fw-bold {
+        color: #2d3748;
+        line-height: 1.4;
+    }
+
+    .badge.bg-primary {
+        background-color: #764ba2 !important;
+    }
+</style>
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -32,15 +138,16 @@
                                 </div>
                             </div>
 
-                            <div class="d-grid mt-4">
-                                <a asp-action="Start" 
-                                   asp-controller="TestPassing" 
-                                   asp-route-testId="@Model.TestId" 
-                                   asp-route-questionIndex="@((int)ViewBag.QuestionIndex + 1)" 
-                                   class="btn btn-success btn-lg rounded-pill shadow">
-                                    Наступне питання &rarr;
-                                </a>
-                            </div>
+                               <div class="d-grid mt-4">
+        <a asp-action="Start" 
+           asp-controller="TestPassing" 
+           asp-route-testId="@Model.TestId" 
+           asp-route-questionIndex="@((int)ViewBag.QuestionIndex + 1)" 
+           asp-route-handler="next" 
+           class="btn btn-success btn-lg rounded-pill shadow">
+            Наступне питання &rarr;
+        </a>
+    </div>
                 }
                 else
                 {
@@ -117,16 +224,3 @@
                 });
             </script>
 }
-
-<style>
-    .option-label:hover {
-        background-color: #f8f9fa;
-        transform: translateY(-2px);
-    }
-    .option-label.border-primary {
-        border-width: 2px !important;
-    }
-    .progress-bar {
-        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-</style>
