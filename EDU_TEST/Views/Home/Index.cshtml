@@ -158,11 +158,9 @@
 
 <div class="gradient-bg">
 
-
     <div class="particle p1"></div>
     <div class="particle p2"></div>
     <div class="particle p3"></div>
-
 
     <div class="hero-content">
         <div class="container text-center text-white">
@@ -203,11 +201,26 @@
                         <h4>Про систему</h4>
                         <p>AI • Тести • Статистика</p>
 
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
-                            <a href="/Student/Index" class="btn btn-success btn-glow">
-                                Проходити тести
-                            </a>
+                            if (User.IsInRole("Student"))
+                            {
+                                <a href="/Student/Index" class="btn btn-success btn-glow">
+                                    Проходити тести
+                                </a>
+                            }
+                            else if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                            {
+                                 <a href="/Admin/Index#tests" class="btn btn-primary btn-glow">
+                                    Керувати тестами
+                                 </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary btn-glow" disabled>
+                                    Немає доступних дій
+                                </button>
+                            }
                         }
                         else
                         {

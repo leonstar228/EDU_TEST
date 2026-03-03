@@ -1,144 +1,69 @@
 ﻿@model IEnumerable<EDU_TEST.Models.TestResult>
+@{
+    ViewData["Title"] = "Мої результати";
+}
 
-    <style>
-    /* Загальні налаштування сторінки */
-    body {
-        background-color: #f8f9fa; /* Світлий фон для сторінки списку, щоб картки виділялися */
-    }
-
-    .container {
-        position: relative;
-        z-index: 2;
-    }
-
-    /* Заголовок */
-    h2.fw-bold {
-        color: #2d3436;
-        letter-spacing: -0.5px;
-    }
-
-    /* Картки результатів */
-    .card {
-        border: none !important;
-        background: #ffffff !important;
-        border-radius: 20px !important;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
-        transition: all 0.3s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.15) !important;
-    }
-
-    .card-title {
-        color: #2d3436 !important;
-        font-size: 1.15rem;
-    }
-
-    /* Стилізація відсотків */
-    .text-success {
-        color: #27ae60 !important;
-        text-shadow: 0 2px 4px rgba(39, 174, 96, 0.1);
-    }
-
-    .text-danger {
-        color: #e74c3c !important;
-        text-shadow: 0 2px 4px rgba(231, 76, 60, 0.1);
-    }
-
-    /* Кнопки та посилання */
-    .btn-outline-primary {
-        border: 2px solid #667eea !important;
-        color: #667eea !important;
-        font-weight: 600;
-        transition: 0.3s;
-    }
-
-    .btn-outline-primary:hover {
-        background: #667eea !important;
-        color: #fff !important;
-    }
-
-    .btn-link {
-        color: #764ba2 !important;
-        font-weight: 500;
-        transition: 0.2s;
-    }
-
-    .btn-link:hover {
-        color: #667eea !important;
-        padding-left: 5px !important; /* Ефект зміщення при наведенні на стрілочку */
-    }
-
-    /* Стилізація стану "Порожньо" */
-    .alert-info {
-        background: white !important;
-        border: none !important;
-        border-radius: 25px !important;
-        color: #2d3436 !important;
-        border: 1px dashed #667eea !important;
-    }
-
-    .alert-info h4 {
-        color: #764ba2;
-        font-weight: bold;
-    }
-
-    .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        border: none !important;
-        border-radius: 50px !important;
-        padding: 10px 25px !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3) !important;
-    }
-
-    .btn-primary:hover {
-        opacity: 0.9;
-        transform: scale(1.02);
-    }
-</style>
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold">📚 Мої досягнення</h2>
-        <a asp-action="Index" class="btn btn-outline-primary rounded-pill">До списку тестів</a>
+<div class="container py-5">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+        <div>
+            <h2 class="mb-1 fw-bold">📚 Мої результати</h2>
+            <div class="text-muted">Історія проходження тестів і підсумкові бали</div>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-primary rounded-pill px-4">
+            До списку тестів
+        </a>
     </div>
 
-    @if (!Model.Any())
+    @if (Model == null || !Model.Any())
     {
-                <div class="alert alert-info text-center p-5 shadow-sm">
-                    <h4>Ви ще не пройшли жодного тесту.</h4>
-                    <p>Час перевірити свої знання!</p>
-                    <a asp-action="Index" class="btn btn-primary mt-3">Обрати тест</a>
-                </div>
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4 p-md-5 text-center">
+                <div class="display-6 mb-2">😌</div>
+                <h4 class="fw-semibold mb-2">Ви ще не пройшли жодного тесту</h4>
+                <p class="text-muted mb-4">Оберіть тест зі списку та перевірте свої знання.</p>
+                <a asp-action="Index" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                    Обрати тест
+                </a>
+            </div>
+        </div>
     }
     else
     {
-                <div class="row">
+        <div class="row g-4">
             @foreach (var res in Model)
             {
-                                <div class="col-md-6 mb-4">
-                                    <div class="card h-100 shadow-sm border-0" style="border-radius: 15px;">
-                                        <div class="card-body d-flex justify-content-between align-items-center p-4">
-                                            <div>
-                                                <h5 class="card-title fw-bold mb-1">@res.Test?.Title</h5>
-                                                <p class="text-muted small mb-0">
-                                                    📅 @res.DateTaken.ToString("dd.MM.yyyy HH:mm")
-                                                </p>
-                                            </div>
-                                            <div class="text-end">
-                                                <div class="h2 fw-bold mb-0 @(res.Score >= 60 ? "text-success" : "text-danger")">
-                                    @res.Score%
-                                                </div>
-                                                <a asp-action="ResultSummary" asp-route-testId="@res.TestId" class="btn btn-sm btn-link text-decoration-none p-0">
-                                                    Переглянути помилки →
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                var isPass = res.Score >= 60;
+
+                <div class="col-12 col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-body p-4 d-flex align-items-start justify-content-between gap-3">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1 fw-semibold">@res.Test?.Title</h5>
+                                <div class="text-muted small">
+                                    📅 @res.DateTaken.ToString("dd.MM.yyyy HH:mm")
                                 </div>
-            }
+                            </div>
+
+                            <div class="text-end">
+                                <div class="h2 fw-bold mb-0 @(isPass ? "text-success" : "text-danger")">
+                                    @res.Score%
+                                </div>
+                                <a asp-action="ResultSummary"
+                                   asp-route-testId="@res.TestId"
+                                   class="btn btn-link p-0 text-decoration-none">
+                                    Переглянути правильні відповіді →
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-transparent border-0 px-4 pb-4 pt-0">
+                            <span class="badge rounded-pill px-3 py-2 @(isPass ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger")">
+                                @(isPass ? "Тест складено" : "Тест не складено")
+                            </span>
+                        </div>
+                    </div>
                 </div>
+            }
+        </div>
     }
 </div>

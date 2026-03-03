@@ -1,0 +1,114 @@
+﻿@model EDU_TEST.ViewModels.EditQuestionViewModel
+
+@{
+    ViewData["Title"] = "Редагування питання";
+    var answers = Model.Answers ?? new List<EDU_TEST.ViewModels.EditAnswerOptionViewModel>();
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-9">
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header border-0 rounded-top-4 text-white"
+                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <h4 class="mb-0 fw-semibold">Редагування питання</h4>
+                        <div class="d-flex gap-2">
+                            <span class="badge bg-light text-dark rounded-pill px-3 py-2">Test ID: #@Model.TestId</span>
+                            <span class="badge bg-light text-dark rounded-pill px-3 py-2">Question ID: #@Model.QuestionId</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger py-2 small mb-4">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        </div>
+                    }
+
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="QuestionId" />
+                        <input type="hidden" asp-for="TestId" />
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Текст питання</label>
+                            <input asp-for="Text" class="form-control form-control-lg" />
+                            <span asp-validation-for="Text" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                            <h5 class="mb-0 fw-semibold">Варіанти відповідей</h5>
+                            <span class="text-muted small">Познач правильну відповідь (радіо-кнопка)</span>
+                        </div>
+
+                        @if (answers.Count == 0)
+                        {
+                            <div class="alert alert-warning border-0 rounded-4">
+                                Немає варіантів відповідей. Додайте варіанти відповідей для цього питання.
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="vstack gap-3">
+                                @for (int i = 0; i < answers.Count; i++)
+                                {
+                                    <div class="card border-0 shadow-sm rounded-4">
+                                        <div class="card-body p-4">
+                                            <input type="hidden" asp-for="Answers[i].AnswerOptionId" />
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Відповідь @(i + 1)</label>
+                                                <input asp-for="Answers[i].Text" class="form-control" />
+                                                <span asp-validation-for="Answers[i].Text" class="text-danger small"></span>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                       name="CorrectAnswerOptionId"
+                                                       value="@answers[i].AnswerOptionId"
+                                                @(Model.CorrectAnswerOptionId == answers[i].AnswerOptionId ? "checked" : "") />
+                                                <label class="form-check-label">
+                                                    Правильна відповідь
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-4 rounded-pill shadow-sm">
+                                Зберегти
+                            </button>
+                            <a asp-action="List" asp-route-testId="@Model.TestId" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">
+                                Назад
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-transparent border-0 px-4 px-md-5 pb-4">
+                    <div class="text-muted small">
+                        Нагадування: у тесті має бути рівно 1 правильна відповідь (це ти просив раніше).
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

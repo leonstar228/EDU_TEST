@@ -1,6 +1,57 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-9">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header border-0 rounded-top-4 text-white"
+                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h3 class="mb-0 fw-semibold">@ViewData["Title"]</h3>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <p class="text-muted mb-4">
+                        Ця сторінка описує загальні принципи конфіденційності платформи EDU_TEST.
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <div class="p-4 rounded-4 bg-light h-100">
+                                <div class="fw-semibold mb-1">Збір даних</div>
+                                <div class="text-muted">
+                                    Ми зберігаємо лише дані, необхідні для входу та результатів тестування.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="p-4 rounded-4 bg-light h-100">
+                                <div class="fw-semibold mb-1">Безпека</div>
+                                <div class="text-muted">
+                                    Паролі зберігаються у вигляді хешу. Доступ до панелей обмежено ролями.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="p-4 rounded-4 bg-light">
+                                <div class="fw-semibold mb-1">Контакти</div>
+                                <div class="text-muted">
+                                    Якщо є питання — звертайтесь на пошту підтримки (вказана у футері).
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                            На головну
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

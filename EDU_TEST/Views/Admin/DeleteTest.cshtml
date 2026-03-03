@@ -1,12 +1,55 @@
 ﻿@model EDU_TEST.Models.Test
+@{
+    ViewData["Title"] = "Видалити тест";
+}
 
-<h2>Видалити тест</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header border-0 rounded-top-4 text-white bg-danger">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="mb-0 fw-semibold">Підтвердження видалення</h4>
+                        <span class="badge bg-light text-dark rounded-pill px-3 py-2">ID: #@Model.Id</span>
+                    </div>
+                </div>
 
-<p>Ви впевнені, що хочете видалити тест: <strong>@Model.Title</strong>?</p>
+                <div class="card-body p-4 p-md-5">
+                    <div class="alert alert-warning border-0 rounded-4 mb-4">
+                        <div class="d-flex gap-3">
+                            <div class="fs-3">⚠️</div>
+                            <div>
+                                <div class="fw-semibold mb-1">Цю дію неможливо скасувати.</div>
+                                <div class="text-muted">
+                                    Ви впевнені, що хочете видалити тест:
+                                    <span class="fw-semibold text-dark">“@Model.Title”</span>?
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-<form method="post" action="/Admin/DeleteTestConfirmed">
-    <input type="hidden" name="id" value="@Model.Id" />
+                    <form method="post" action="/Admin/DeleteTestConfirmed">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
 
-    <button type="submit" class="btn btn-danger">Видалити</button>
-    <a href="/Admin" class="btn btn-secondary">Скасувати</a>
-</form>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg px-4 rounded-pill shadow-sm">
+                                Видалити
+                            </button>
+
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">
+                                Скасувати
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-transparent border-0 px-4 px-md-5 pb-4">
+                    <div class="text-muted small">
+                        Якщо сумніваєшся — краще повернись назад і просто відредагуй тест.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-using EDU_TEST.Data;
+Ôªøusing EDU_TEST.Data;
 using EDU_TEST.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,21 +17,41 @@ namespace EDU_TEST.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        // ‚úÖ –î–û–î–ê–ù–û: –ø–æ—à—É–∫ —Ç–µ—Å—Ç—ñ–≤ (q) + –∑–±–µ—Ä–µ–∂–µ–Ω–Ω—è –≤–∫–ª–∞–¥–∫–∏ (tab)
+        // tab: "available" –∞–±–æ "myresults"
+        [HttpGet]
+        public async Task<IActionResult> Index(string? q, string? tab)
         {
             var userIdStr = User.FindFirst("UserId")?.Value
-                           ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                           ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "Auth");
+            if (string.IsNullOrEmpty(userIdStr))
+                return RedirectToAction("Login", "Auth");
+
             int userId = int.Parse(userIdStr);
 
-            var availableTests = await _context.Tests.Include(t => t.Questions).ToListAsync();
+            ViewBag.SearchQuery = q ?? "";
+            ViewBag.ActiveTab = string.IsNullOrWhiteSpace(tab) ? "available" : tab;
 
-            // Œ¡Œ¬'ﬂ« Œ¬Œ ‰Ó‰‡ÈÚÂ ˆÂ, ˘Ó· ÂÁÛÎ¸Ú‡ÚË Á'ˇ‚ËÎËÒˇ Ì‡ ‚ÍÎ‡‰ˆ≥
+            IQueryable<Test> testsQuery = _context.Tests
+                .Include(t => t.Questions)
+                .AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                var s = q.Trim().ToLower();
+                testsQuery = testsQuery.Where(t => t.Title.ToLower().Contains(s));
+            }
+
+            var availableTests = await testsQuery
+                .OrderBy(t => t.Title)
+                .ToListAsync();
+
             ViewBag.MyResults = await _context.TestResults
                 .Include(r => r.Test)
                 .Where(r => r.StudentId == userId)
                 .OrderByDescending(r => r.DateTaken)
+                .AsNoTracking()
                 .ToListAsync();
 
             return View(availableTests);
@@ -52,9 +72,12 @@ namespace EDU_TEST.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitTest(int testId, Dictionary<int, string> answers)
         {
-            var userIdStr = User.FindFirstValue("UserId");
+            var userIdStr = User.FindFirstValue("UserId")
+                           ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(userIdStr))
                 return RedirectToAction("Login", "Auth");
 
@@ -62,6 +85,7 @@ namespace EDU_TEST.Controllers
 
             var questions = await _context.Questions
                 .Where(q => q.TestId == testId)
+                .AsNoTracking()
                 .ToListAsync();
 
             int correctCount = 0;
@@ -69,7 +93,7 @@ namespace EDU_TEST.Controllers
             foreach (var q in questions)
             {
                 if (answers.ContainsKey(q.Id) &&
-                    answers[q.Id].Trim() == q.CorrectAnswer.Trim())
+                    (answers[q.Id] ?? "").Trim() == (q.CorrectAnswer ?? "").Trim())
                 {
                     correctCount++;
                 }
@@ -90,12 +114,16 @@ namespace EDU_TEST.Controllers
             _context.TestResults.Add(result);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("MyResults");
+            // ‚úÖ –ü–Ü–°–õ–Ø –ó–î–ê–ß–Ü: –ø–æ–≤–µ—Ä—Ç–∞—î–º–æ—Å—å –≤ –∫–∞–±—ñ–Ω–µ—Ç –Ω–∞ –≤–∫–ª–∞–¥–∫—É —Ä–µ–∑—É–ª—å—Ç–∞—Ç—ñ–≤
+            return RedirectToAction("Index", new { tab = "myresults" });
         }
 
+        [HttpGet]
         public async Task<IActionResult> MyResults()
         {
-            var userIdStr = User.FindFirstValue("UserId");
+            var userIdStr = User.FindFirstValue("UserId")
+                           ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(userIdStr))
                 return RedirectToAction("Login", "Auth");
 
@@ -105,13 +133,18 @@ namespace EDU_TEST.Controllers
                 .Include(tr => tr.Test)
                 .Where(tr => tr.StudentId == userId)
                 .OrderByDescending(tr => tr.DateTaken)
+                .AsNoTracking()
                 .ToListAsync();
 
             return View(results);
         }
+
+        [HttpGet]
         public async Task<IActionResult> ResultSummary(int testId)
         {
-            var userIdStr = User.FindFirstValue("UserId");
+            var userIdStr = User.FindFirstValue("UserId")
+                           ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(userIdStr))
                 return RedirectToAction("Login", "Auth");
 
@@ -130,6 +163,5 @@ namespace EDU_TEST.Controllers
 
             return View(result);
         }
-
     }
 }

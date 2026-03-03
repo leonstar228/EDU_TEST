@@ -15,7 +15,7 @@ namespace EDU_TEST.Models
         [Required(ErrorMessage = "Правильна відповідь обов'язкова")]
         public string CorrectAnswer { get; set; } = string.Empty;
 
-        public ICollection<AnswerOption>? Options { get; set; }
+        public ICollection<AnswerOption> Options { get; set; } = new List<AnswerOption>();
 
         [Required]
         [ForeignKey(nameof(Test))]

@@ -1,0 +1,81 @@
+﻿@model EDU_TEST.Models.AnswerOption
+@{
+    ViewData["Title"] = "Додати варіант відповіді";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header border-0 text-white"
+                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 py-2">
+                        <h4 class="mb-0 fw-semibold">Додати варіант відповіді</h4>
+                        <span class="badge bg-light text-dark rounded-pill px-3 py-2">AnswerOption</span>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger py-2 small mb-4">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="QuestionId" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Текст варіанту</label>
+                            <input asp-for="Text" class="form-control form-control-lg" placeholder="Введіть відповідь..." />
+                            <span asp-validation-for="Text" class="text-danger small"></span>
+                        </div>
+
+                        <div class="p-4 rounded-4 bg-light mb-4">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" asp-for="IsCorrect" />
+                                <label class="form-check-label fw-semibold" asp-for="IsCorrect">
+                                    Позначити як правильну
+                                </label>
+                            </div>
+                            <div class="text-muted small">
+                                У питання має бути рівно 1 правильна відповідь (0 не допускається).
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                Зберегти
+                            </button>
+
+                            <a asp-controller="AnswerOption" asp-action="List" asp-route-questionId="@Model.QuestionId"
+                               class="btn btn-outline-secondary rounded-pill px-4">
+                                Назад
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-transparent border-0 px-4 px-md-5 pb-4">
+                    <div class="text-muted small">
+                        Після додавання перевірте, що тільки 1 варіант має прапорець “правильно”.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

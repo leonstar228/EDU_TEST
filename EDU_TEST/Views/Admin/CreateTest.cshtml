@@ -1,14 +1,64 @@
 ﻿@model EDU_TEST.Models.Test
+@{
+    ViewData["Title"] = "Створити тест";
+}
 
-<h2>Створити тест</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header border-0 rounded-top-4 text-white"
+                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="mb-0 fw-semibold">Створити тест</h4>
+                        <span class="badge bg-light text-dark rounded-pill px-3 py-2">Admin</span>
+                    </div>
+                </div>
 
-<form method="post">
-    <div class="form-group">
-        <label>Назва тесту</label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+                <div class="card-body p-4 p-md-5">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger small mb-4">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        </div>
+                    }
+
+                    <form asp-action="CreateTest" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Назва тесту</label>
+                            <input asp-for="Title" class="form-control form-control-lg" placeholder="Наприклад: Основи C# (тема 1)" />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-4 rounded-pill shadow-sm">
+                                Створити
+                            </button>
+
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">
+                                Назад
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-transparent border-0 px-4 px-md-5 pb-4">
+                    <div class="text-muted small">
+                        Порада: коротка й конкретна назва робить тест зручнішим для студентів.
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <button type="submit" class="btn btn-success mt-3">Створити</button>
-    <a href="/Admin" class="btn btn-secondary mt-3">Назад</a>
-</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

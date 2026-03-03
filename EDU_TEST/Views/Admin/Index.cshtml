@@ -1,7 +1,31 @@
 @model IEnumerable<EDU_TEST.Models.Test>
+@using EDU_TEST.Models
 @{
     ViewData["Title"] = "Панель керування";
-    var results = ViewBag.AllResults as IEnumerable<EDU_TEST.Models.TestResult>;
+
+    var students = ViewBag.Students as IEnumerable<User>;
+    var testsList = ViewBag.TestsList as IEnumerable<Test>;
+
+    var results = ViewBag.Results as IEnumerable<TestResult>;
+
+    int? selectedStudentId = ViewBag.SelectedStudentId as int?;
+    int? selectedTestId = ViewBag.SelectedTestId as int?;
+
+    string viewMode = (ViewBag.ViewMode as string) ?? "student";
+    string sort = (ViewBag.Sort as string) ?? "date";
+    string dir = (ViewBag.Dir as string) ?? "desc";
+
+    var testQ = (ViewBag.TestQ as string) ?? "";
+
+    string ToggleDir(string col) => (sort == col && dir == "asc") ? "desc" : "asc";
+
+    string UrlForStudent(string col) =>
+        Url.Action("Index", "Admin", new { viewMode = "student", studentId = selectedStudentId, sort = col, dir = ToggleDir(col), testQ = testQ }) + "#ratings";
+
+    string UrlForTest(string col) =>
+        Url.Action("Index", "Admin", new { viewMode = "test", testId = selectedTestId, sort = col, dir = ToggleDir(col), testQ = testQ }) + "#ratings";
+
+    string Arrow(string col) => sort == col ? (dir == "asc" ? " ▲" : " ▼") : "";
 }
 
 <style>
@@ -21,6 +45,15 @@
         background-color: rgba(102, 126, 234, 0.05);
         transition: 0.3s;
     }
+
+    th a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+        th a:hover {
+            text-decoration: underline;
+        }
 </style>
 
 <div class="container mt-5">
@@ -36,7 +69,7 @@
         </li>
         <li class="nav-item">
             <button class="nav-link rounded-pill" id="ratings-tab" data-bs-toggle="tab" data-bs-target="#ratings" type="button">
-                <i class="fas fa-trophy me-2"></i>Рейтинги студентів
+                <i class="fas fa-trophy me-2"></i>Рейтинги
             </button>
         </li>
     </ul>
@@ -44,12 +77,25 @@
     <div class="tab-content">
         <div class="tab-pane fade show active" id="tests">
             <div class="admin-card shadow-lg p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>Список доступних тестів</h3>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0">Список доступних тестів</h3>
                     <a href="/Admin/CreateTest" class="btn btn-success btn-pulse rounded-pill px-4">
                         <i class="fas fa-plus me-2"></i>Створити тест
                     </a>
                 </div>
+
+                <form method="get" asp-controller="Admin" asp-action="Index" class="row g-2 align-items-center mb-3">
+                    <div class="col-md-8">
+                        <input name="testQ" value="@testQ" class="form-control rounded-pill" placeholder="Пошук тестів за назвою..." />
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-primary rounded-pill">Знайти</button>
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <a class="btn btn-outline-secondary rounded-pill" href="/Admin/Index">Скинути</a>
+                    </div>
+                </form>
+
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
@@ -69,52 +115,162 @@
                                         <i class="fas fa-list-ol"></i> Питання
                                     </a>
                                     <a href="/Admin/EditTest/@test.Id" class="btn btn-sm btn-outline-warning rounded-pill me-2">
-                                        <i class="fas fa-edit"></i>
+                                        <i class="fas fa-edit"></i> Редагувати
                                     </a>
                                     <a href="/Admin/DeleteTest/@test.Id" class="btn btn-sm btn-outline-danger rounded-pill">
-                                        <i class="fas fa-trash"></i>
+                                        <i class="fas fa-trash"></i> Видалити
                                     </a>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
+
+                @if (!Model.Any())
+                {
+                    <div class="text-center text-muted py-3">Нічого не знайдено.</div>
+                }
             </div>
         </div>
 
         <div class="tab-pane fade" id="ratings">
             <div class="admin-card shadow-lg p-4">
-                <h3>Успішність студентів</h3>
-                <table class="table table-hover mt-3">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Студент</th>
-                            <th>Тест</th>
-                            <th>Результат</th>
-                            <th>Дата</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (results != null)
-                        {
-                            @foreach (var res in results)
-                            {
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Успішність</h3>
+                    <a class="btn btn-sm btn-outline-secondary rounded-pill" href="/Admin/Index#ratings">Скинути вибір</a>
+                </div>
+
+                <ul class="nav nav-pills mt-3" id="ratingsModeTabs" role="tablist">
+                    <li class="nav-item me-2">
+                        <a class="nav-link rounded-pill @(viewMode == "student" ? "active" : "")"
+                           href="@(Url.Action("Index","Admin", new { viewMode="student", studentId = selectedStudentId, sort = sort, dir = dir, testQ = testQ }) + "#ratings")">
+                            👤 По студентах
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link rounded-pill @(viewMode == "test" ? "active" : "")"
+                           href="@(Url.Action("Index","Admin", new { viewMode="test", testId = selectedTestId, sort = sort, dir = dir, testQ = testQ }) + "#ratings")">
+                            🧪 По тестах
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="mt-3">
+                    @if (viewMode == "student")
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Оберіть студента</label>
+                            <select class="form-select"
+                                    onchange="if(this.value) location.href='@Url.Action("Index","Admin")?viewMode=student&studentId=' + this.value + '&sort=@sort&dir=@dir&testQ=@testQ#ratings'; else location.href='@Url.Action("Index","Admin")?viewMode=student&testQ=@testQ#ratings';">
+                                <option value="">-- Оберіть --</option>
+                                @if (students != null)
+                                {
+                                    foreach (var s in students)
+                                    {
+                                        var isSel = selectedStudentId.HasValue && selectedStudentId.Value == s.Id;
+                                        <option value="@s.Id" selected="@(isSel ? "selected" : null)">
+                                            @s.LastName @s.FirstName
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <table class="table table-hover mt-3">
+                            <thead class="table-light">
                                 <tr>
-                                    <td>@res.Student?.FirstName @res.Student?.LastName</td>
-                                    <td>@res.Test?.Title</td>
-                                    <td>
-                                        <div class="progress" style="height: 10px; width: 100px;">
-                                            <div class="progress-bar bg-success" style="width: @res.Score%"></div>
-                                        </div>
-                                        <small>@res.Score%</small>
-                                    </td>
-                                    <td>@res.DateTaken.ToShortDateString()</td>
+                                    <th><a href='@(UrlForStudent("test"))'>Тест@(Arrow("test"))</a></th>
+                                    <th><a href='@(UrlForStudent("score"))'>Результат@(Arrow("score"))</a></th>
+                                    <th><a href='@(UrlForStudent("date"))'>Дата@(Arrow("date"))</a></th>
                                 </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
+                            </thead>
+                            <tbody>
+                                @if (!selectedStudentId.HasValue)
+                                {
+                                    <tr><td colspan="3" class="text-center text-muted py-4">Оберіть студента зверху</td></tr>
+                                }
+                                else if (results == null || !results.Any())
+                                {
+                                    <tr><td colspan="3" class="text-center text-muted py-4">У цього студента поки немає результатів</td></tr>
+                                }
+                                else
+                                {
+                                    foreach (var res in results)
+                                    {
+                                        <tr>
+                                            <td>@res.Test?.Title</td>
+                                            <td>@res.Score%</td>
+                                            <td>@res.DateTaken.ToShortDateString()</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Оберіть тест</label>
+                            <select class="form-select"
+                                    onchange="if(this.value) location.href='@Url.Action("Index","Admin")?viewMode=test&testId=' + this.value + '&sort=@sort&dir=@dir&testQ=@testQ#ratings'; else location.href='@Url.Action("Index","Admin")?viewMode=test&testQ=@testQ#ratings';">
+                                <option value="">-- Оберіть --</option>
+                                @if (testsList != null)
+                                {
+                                    foreach (var t in testsList)
+                                    {
+                                        var isSel = selectedTestId.HasValue && selectedTestId.Value == t.Id;
+                                        <option value="@t.Id" selected="@(isSel ? "selected" : null)">
+                                            @t.Title
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <table class="table table-hover mt-3">
+                            <thead class="table-light">
+                                <tr>
+                                    <th><a href='@(UrlForTest("student"))'>Студент@(Arrow("student"))</a></th>
+                                    <th><a href='@(UrlForTest("score"))'>Результат@(Arrow("score"))</a></th>
+                                    <th><a href='@(UrlForTest("date"))'>Дата@(Arrow("date"))</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!selectedTestId.HasValue)
+                                {
+                                    <tr><td colspan="3" class="text-center text-muted py-4">Оберіть тест зверху</td></tr>
+                                }
+                                else if (results == null || !results.Any())
+                                {
+                                    <tr><td colspan="3" class="text-center text-muted py-4">По цьому тесту поки немає результатів</td></tr>
+                                }
+                                else
+                                {
+                                    foreach (var res in results)
+                                    {
+                                        <tr>
+                                            <td>@res.Student?.LastName @res.Student?.FirstName</td>
+                                            <td>@res.Score%</td>
+                                            <td>@res.DateTaken.ToShortDateString()</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.location.hash === '#ratings') {
+                const btn = document.getElementById('ratings-tab');
+                if (btn) bootstrap.Tab.getOrCreateInstance(btn).show();
+            }
+        });
+    </script>
+}

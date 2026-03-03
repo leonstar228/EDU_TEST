@@ -1,27 +1,82 @@
 ﻿@model EDU_TEST.ViewModels.CreateAdminViewModel
+@{
+    ViewData["Title"] = "Створити адміністратора";
+}
 
-<h2>Створити адміністратора</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header border-0 rounded-top-4 text-white"
+                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="mb-0 fw-semibold">Створити адміністратора</h4>
+                        <span class="badge bg-light text-dark rounded-pill px-3 py-2">SuperAdmin</span>
+                    </div>
+                </div>
 
-<form method="post">
-    <div class="form-group">
-        <label>Ім'я</label>
-        <input asp-for="FirstName" class="form-control" />
+                <div class="card-body p-4 p-md-5">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger py-2 small mb-4">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        </div>
+                    }
+
+                    <form asp-action="CreateAdmin" method="post">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">Ім'я</label>
+                                <input asp-for="FirstName" class="form-control form-control-lg" />
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">Прізвище</label>
+                                <input asp-for="LastName" class="form-control form-control-lg" />
+                                <span asp-validation-for="LastName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input asp-for="Email" class="form-control form-control-lg" />
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Пароль</label>
+                                <input asp-for="Password" type="password" class="form-control form-control-lg" />
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-4 rounded-pill shadow-sm">
+                                Створити
+                            </button>
+
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">
+                                Назад
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-transparent border-0 px-4 px-md-5 pb-4">
+                    <div class="text-muted small">
+                        Після створення адміністратор зможе увійти в систему через сторінку входу.
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="form-group">
-        <label>Прізвище</label>
-        <input asp-for="LastName" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Email</label>
-        <input asp-for="Email" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Пароль</label>
-        <input asp-for="Password" type="password" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary mt-3">Створити</button>
-</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

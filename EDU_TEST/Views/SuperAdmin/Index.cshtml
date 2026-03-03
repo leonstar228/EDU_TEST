@@ -1,33 +1,76 @@
 ﻿@{
-    ViewData["Title"] = "Super Admin Panel";
+    ViewData["Title"] = "Панель SuperAdmin";
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4">Панель Супер Адміністратора</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
 
-    <div class="row">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header border-0 text-white"
+                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 py-2">
+                        <div>
+                            <h3 class="mb-1 fw-bold">Панель SuperAdmin</h3>
+                            <div class="text-white-50">Керування адміністраторами системи</div>
+                        </div>
+                        <span class="badge bg-light text-dark rounded-pill px-3 py-2">SuperAdmin</span>
+                    </div>
+                </div>
 
-        <!-- Створити адміна -->
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Створити адміністратора</h5>
-                    <p class="card-text">Додайте нового адміністратора до системи.</p>
-                    <a href="/SuperAdmin/CreateAdmin" class="btn btn-primary">Створити</a>
+                <div class="card-body p-4 p-md-5">
+                    <div class="row g-4">
+                        <div class="col-12 col-md-6">
+                            <div class="card border-0 shadow-sm rounded-4 h-100">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-center gap-3 mb-3">
+                                        <div class="rounded-4 d-inline-flex align-items-center justify-content-center"
+                                             style="width:56px;height:56px;background: rgba(102,126,234,0.12);">
+                                            <span class="fs-4">👤</span>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1 fw-semibold">Створити адміністратора</h5>
+                                            <div class="text-muted">Додайте нового адміністратора до системи.</div>
+                                        </div>
+                                    </div>
+
+                                    <a href="/SuperAdmin/CreateAdmin" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                        Створити
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="card border-0 shadow-sm rounded-4 h-100">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-center gap-3 mb-3">
+                                        <div class="rounded-4 d-inline-flex align-items-center justify-content-center"
+                                             style="width:56px;height:56px;background: rgba(118,75,162,0.12);">
+                                            <span class="fs-4">📋</span>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1 fw-semibold">Список адміністраторів</h5>
+                                            <div class="text-muted">Перегляньте всіх адміністраторів системи.</div>
+                                        </div>
+                                    </div>
+
+                                    <a href="/SuperAdmin/AdminList" class="btn btn-outline-secondary rounded-pill px-4">
+                                        Переглянути
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-transparent border-0 px-4 px-md-5 pb-4">
+                    <div class="text-muted small">
+                        Порада: при потребі можна додати видалення/блокування адміністраторів і журнал дій.
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Список адмінів -->
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Список адміністраторів</h5>
-                    <p class="card-text">Перегляньте всіх адміністраторів системи.</p>
-                    <a href="/SuperAdmin/AdminList" class="btn btn-secondary">Переглянути</a>
-                </div>
-            </div>
         </div>
-        
     </div>
 </div>

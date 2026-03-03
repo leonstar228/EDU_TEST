@@ -1,27 +1,72 @@
 ﻿@model List<User>
+@{
+    ViewData["Title"] = "Список адміністраторів";
+}
 
-<h2>Список адміністраторів</h2>
+<div class="container py-5">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+        <div>
+            <h2 class="mb-1 fw-bold">Список адміністраторів</h2>
+            <div class="text-muted">Перегляд користувачів з роллю <span class="fw-semibold">Admin</span>.</div>
+        </div>
 
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Ім'я</th>
-        <th>Прізвище</th>
-        <th>Email</th>
-        <th>Дата створення</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var admin in Model)
-    {
-        <tr>
-            <td>@admin.Id</td>
-            <td>@admin.FirstName</td>
-            <td>@admin.LastName</td>
-            <td>@admin.Email</td>
-            <td>@admin.CreatedAt.ToString("dd.MM.yyyy")</td>
-        </tr>
-    }
-    </tbody>
-</table>
+        <a asp-controller="SuperAdmin" asp-action="CreateAdmin" class="btn btn-primary rounded-pill px-4 shadow-sm">
+            + Додати адміністратора
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Ім'я</th>
+                            <th>Прізвище</th>
+                            <th>Email</th>
+                            <th>Дата створення</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null || Model.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    Немає адміністраторів для відображення.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var admin in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 fw-semibold">#@admin.Id</td>
+                                    <td>@admin.FirstName</td>
+                                    <td>@admin.LastName</td>
+                                    <td>
+                                        <span class="text-break">@admin.Email</span>
+                                    </td>
+                                    <td>@admin.CreatedAt.ToString("dd.MM.yyyy")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer bg-transparent border-0 px-4 py-3">
+            <div class="text-muted small">
+                Порада: якщо список стане великим — додамо пошук/фільтр і пагінацію.
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-controller="SuperAdmin" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+            Назад до панелі
+        </a>
+    </div>
+</div>
